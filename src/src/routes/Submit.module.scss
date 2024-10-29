@@ -6,12 +6,17 @@
   .pageTitle {
     font-weight: bold;
     text-align: center;
-    font-size: min(4rem, 5vw);
+    font-size: min(3rem, 5vw);
     text-wrap: balance;
     // @include small-down() {
     //   font-size: 
     // }
+
+    span {
+      color: var(--color-primary);
+    }
   }
+
 
   .leader {
     row-gap: 1rem;

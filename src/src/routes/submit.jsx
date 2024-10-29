@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useLoaderData, defer, Form, Await, useRouteError, Link, useNavigate } from 'react-router-dom'
 import { useAuth, contracts, getDefaultChain } from '../contexts/AuthContext'
-import { getPoint } from './../util/api'
+import { getPoint } from '../util/api'
 import { Title } from './helper/DocumentTitle'
 import Icon from './helper/MaterialIcon'
 import Logo from './../../src/assets/logo.svg'
 import Web3 from 'web3'
-import styles from './Leaderboard.module.scss'
+import styles from './Submit.module.scss'
 import Loading from './components/Loading'
 export default function Owned({ title }) {
   Title(title)
@@ -67,7 +67,7 @@ export default function Owned({ title }) {
   return (
     <section className={styles.section}>
       <div className={`${styles['container']} __container ms-motion-slideUpIn`} data-width={`medium`}>
-        <div className={`${styles['pageTitle']}`}>Kodama Leaderboard</div>
+      <div className={`${styles['pageTitle']}`}>{title} <span>Vote</span></div>
 
         {auth.wallet && data && data.point && data.point.length > 0 && (
           <div className={`${styles['leader']} d-flex flex-column align-items-center justify-content-between`}>

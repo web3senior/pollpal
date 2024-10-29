@@ -1,0 +1,32 @@
+@import './../styles/components/responsive';
+
+.section {
+  padding: 0 16px;
+  height: 100%;
+  isolation: isolate;
+  
+  form {
+    gap: 1rem;
+  }
+
+  .container {
+    height: 100%;
+  }
+
+  .pageTitle {
+    position: absolute;
+    top: 1rem;
+    z-index: 1;
+    font-weight: bold;
+    text-align: center;
+    font-size: min(3rem, 5vw);
+    text-wrap: balance;
+    // @include small-down() {
+    //   font-size:
+    // }
+
+    span {
+      color: var(--color-primary);
+    }
+  }
+}

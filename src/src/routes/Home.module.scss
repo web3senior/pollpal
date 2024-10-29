@@ -2,7 +2,6 @@
 
 .section {
   height: 100%;
-  background-color: var(--global-background-color);
   isolation: isolate;
 
   &__container {
@@ -169,5 +168,97 @@
     transform: translateY(60vh) scaleX(0.85) rotate(45deg);
     width: 1em;
     height: 1em;
+  }
+}
+
+.universal-profile {
+}
+
+.universal-profile-slider {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+
+  &:hover {
+    div {
+      &:nth-child(1) {
+        margin: 0;
+      }
+  
+      &:nth-child(2) {
+        margin: 0 -25px;
+      }
+  
+      &:nth-child(3) {
+        margin: 0;
+      }
+  
+      &:nth-child(4) {
+        margin: 0 -25px;
+      }
+  
+      &:nth-child(5) {
+        margin: 0;
+      }
+    }
+  }
+
+  div {
+    align-items: center;
+    background: hsla(0, 0%, 100%, 0.6);
+    border-radius: 11px;
+    box-shadow: 0 0.829px 2.487px 0 rgba(0, 0, 0, 0.15);
+    display: flex;
+    height: 90px;
+    justify-content: center;
+    transition: all 0.5s ease;
+    width: 85px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+
+    &:nth-child(1) {
+      z-index: 1;
+      height: 60px;
+      background-size: 80%;
+      background-color: #E1F5FE;
+      background-image: url('https://ipfs.io/ipfs/bafkreie6ihvaarou2vd7xutyjxba3knq2oaqpptzyyuyzl6hbf4u4o6ciy');
+    }
+
+    &:nth-child(2) {
+      margin: 0 -50px;
+      z-index: 2;
+      height: 80px;
+
+      background-image: url('https://ipfs.io/ipfs/QmTHBAtweTcnpcbmHz8S5sKrd2VszBnRM5wjTNA6rnEhEE');
+    }
+
+    &:nth-child(3) {
+      background-color: var(--white);
+      z-index: 3;
+      box-shadow: 0px 0px 32px rgba(63, 93, 116, 0.1), 0px 0px 18.46px rgba(63, 93, 116, 0.068), 0px 0px 11.9px rgba(63, 93, 116, 0.05), 0px 0px 9.39px rgba(63, 93, 116, 0.033);
+      background-image: url('https://ipfs.io/ipfs/bafkreifzajflcehakjdl3rjupdkstc57nx7hvhbwucjqlhylpzhusa2dji');
+      img {
+        width: 40px;
+      }
+    }
+
+    &:nth-child(4) {
+      margin: 0 -50px;
+      z-index: 2;
+      height: 80px;
+
+      background-image: url('https://api.universalprofile.cloud/ipfs/bafybeiem5kdrxt3msaej26p5jjqckcvumgctedckgw7l2iexnjhxsebbqi');
+    }
+
+    &:nth-child(5) {
+      z-index: 1;
+      height: 60px;
+      background-size: 100%;
+      background-color: #E1F5FE;
+      background-image: url('https://ipfs.io/ipfs/QmYknYqURYahY9VufEAssTux6hYTmQEkwqfmeyrgDN37ct');
+    }
   }
 }

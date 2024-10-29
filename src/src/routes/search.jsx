@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useLoaderData, defer, Form, Await, useRouteError, Link, useNavigate } from 'react-router-dom'
 import { useAuth, contracts, getDefaultChain } from '../contexts/AuthContext'
 import { getPoint } from '../util/api'
 import { Title } from './helper/DocumentTitle'
 import Icon from './helper/MaterialIcon'
 import Logo from './../../src/assets/logo.svg'
 import Web3 from 'web3'
-import styles from './Frends.module.scss'
-import toast from 'react-hot-toast'
+import styles from './Search.module.scss'
+import Loading from './components/Loading'
 
-export default function Owned({ title }) {
+export default function Search({ title }) {
   Title(title)
+  const [loaderData, setLoaderData] = useState(useLoaderData())
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
   const [data, setData] = useState({ point: [] })
   const [taotlRecordType, setTotalRecordType] = useState(0)
   const [totalResolve, setTotalResolve] = useState(0)
@@ -52,31 +55,31 @@ export default function Owned({ title }) {
   const getCouncilMintExpiration = async () => await contract.methods.councilMintExpiration().call()
   const getMaxSupply = async () => await contract.methods.MAX_SUPPLY().call()
 
-  const handleCopy = async () => {
-    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}?representative=${localStorage.getItem(`UUID`)}`).then(
-      function () {
-        toast.success(`The invite link has been successfully copied.`)
-      },
-      function (err) {
-        toast.success(`${err}`)
-      }
-    )
-  }
+  useEffect(() => {
+    setIsLoading(true)
+    getPoint().then(async (res) => {
+      setData({ point: res })
+      setIsLoading(false)
+    })
+  }, [])
 
-  useEffect(() => {}, [])
+  // if (isLoading) return <Loading />
 
   return (
-    <section className={styles.section}>
-      <div className={`${styles['container']} __container ms-motion-slideUpIn`} data-width={`small`}>
-        <div className={`${styles['pageTitle']}`}>Invite friends and get more Kodama</div>
+    <section className={`${styles.section}  ms-motion-slideUpIn p-relative d-f-c`}>
+      <div className={`${styles['container']} __container d-flex flex-column align-items-center justify-content-center`} data-width={`small`}>
+        
+        <div className={`${styles['pageTitle']}`}>
+          {title} <span>Poll</span>
+        </div>
 
-        <figure className={`d-f-c mt-40`}>
-          <img className={`rounded`} src={Logo} />
-        </figure>
-
-        <div className={`mt-40`}>
-          <input type={`text`} value={`${import.meta.env.VITE_BASE_URL}?representative=${localStorage.getItem(`UUID`)}`} />
-          <button className={`mt-20`} onClick={handleCopy}>Invite friends</button>
+        <div className={`card w-100`}>
+          <div className={`card__body`}>
+            <form action="" className={`w-100 d-flex flex-column align-items-center justify-content-between`}>
+            <input type={`text`} name={``} id={``} placeholder={`Enter the poll id`} />
+            <button>Search</button>
+            </form>
+          </div>
         </div>
       </div>
     </section>

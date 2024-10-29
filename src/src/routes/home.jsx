@@ -8,7 +8,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import Heading from './helper/Heading'
 import { useAuth, contracts, getDefaultChain } from './../contexts/AuthContext'
 import Logo from './../../src/assets/logo.svg'
-import Sticker1 from './../../src/assets/sticker1.png'
+import UniversalProfileIcon from './../../src/assets/universal-profile-icon.svg'
 import party from 'party-js'
 import styles from './Home.module.scss'
 import Web3 from 'web3'
@@ -541,7 +541,7 @@ function Home({ title }) {
   return (
     <section className={`${styles.section} ms-motion-slideDownIn`}>
       <div className={`${styles.section__container} __container`} data-width={`large`}>
-        <div className={`d-f-c flex-column`}>
+        <div className={`d-f-c flex-column mt-50`}>
           <h1>{import.meta.env.VITE_SLOGAN}</h1>
           <h1>
             Built on <span style={{ color: `#FE005B` }}>LUKSO</span>
@@ -562,6 +562,75 @@ function Home({ title }) {
         <p className={`ms-fontWeight-semibold`}>New polls</p>
         <div className={`card`}>
           <div className={`card__body`}>asdf</div>
+        </div>
+
+        <p className={`ms-fontWeight-semibold`}>Recently voted</p>
+        <div className={`card`}>
+          <div className={`card__body`}>asdf</div>
+        </div>
+
+        <div className={`text-center mt-100`}>
+          <h1>Decentralized Voting</h1>
+          <p>Create polls that matter. Share your voice with the world. Trust in the power of decentralized voting</p>
+          <div class="ms-Grid mt-100" dir="ltr">
+          <div class="ms-Grid-row">
+              <div className={`ms-Grid-col ms-sm12 ms-md4 ms-lg8`}>
+                <div className={`card ${styles['universal-profile']}`}>
+                  <div className={`card__body`}>
+
+                    <div className={`${styles['universal-profile-slider']}`}>
+<div />
+<div />
+<div/>
+
+<div />
+<div />
+                    </div>
+                    <b>Your Digital Identity, Your Vote</b>
+                    <p>Elevate your polling experience with Universal Profiles.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ms-Grid-col ms-sm6 ms-md8 ms-lg4">
+                <div className={`card ${styles['universal-profile']}`}>
+                  <div className={`card__body`}>
+                    <b>Your Exclusive Voting Circle</b>
+                    <p>Create private polls and invite specific individuals to participate.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-sm6 ms-md8 ms-lg4">
+                <div className={`card ${styles['universal-profile']}`}>
+                  <div className={`card__body`}>
+                    <b>Your Exclusive Voting Circle</b>
+                    <p>Create private polls and invite specific individuals to participate.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ms-Grid-col ms-sm6 ms-md8 ms-lg4">
+                <div className={`card ${styles['universal-profile']}`}>
+                  <div className={`card__body`}>
+                    <b>Your Exclusive Voting Circle</b>
+                    <p>Create private polls and invite specific individuals to participate.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ms-Grid-col ms-sm6 ms-md8 ms-lg4">
+                <div className={`card ${styles['universal-profile']}`}>
+                  <div className={`card__body`}>
+                    <b>Your Exclusive Voting Circle</b>
+                    <p>Create private polls and invite specific individuals to participate.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

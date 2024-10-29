@@ -21,7 +21,9 @@
 .rounded {
   border-radius: 999px;
 }
-
+.p-relative {
+  position: relative;
+}
 a {
   color: unset;
   text-decoration: none;
@@ -31,44 +33,53 @@ a {
   height: 100%;
 }
 
-// button {
-//   color: var(--primary-button-text-color);
-//   transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
-//   cursor: pointer;
+button {
+  color: var(--primary-button-text-color);
+  transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 
-//   --tile-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14), inset 0 0 0px 2px transparent;
-//   --tile-shadow-hover: 0 0 2px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.14);
-//   text-align: center;
-//   padding: 1.6rem 0.9rem;
-//   background-color: var(--white);
-//   color: var(--black);
-//   font-weight: bolder;
-//   font-size: min(3rem, 3vw);
-//   box-shadow: var(--tile-shadow);
-//   transition: all ease-in-out 0.1s;
-//   -webkit-tap-highlight-color: transparent;
-//   filter: brightness(1.2);
-//   width: 100%;
-//   border: none;
-//   outline: none;
+  --tile-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14), inset 0 0 0px 2px transparent;
+  --tile-shadow-hover: 0 0 2px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.14);
+  text-align: center;
+  padding: 1.6rem 0.9rem;
+  background-color: var(--white);
+  color: var(--white);
+  font-weight: bolder;
+  font-size: 18px;
+  box-shadow: var(--tile-shadow);
+  transition: all ease-in-out 0.1s;
+  width: 100%;
+  border: none;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 25px;
+  gap: 10px;
+  height: 49px;
+  background: var(--color-primary);
+  border-radius: var(--global-border-radius);
+  -webkit-tap-highlight-color: transparent;
 
-//   @include small-down() {
-//   }
+  @include small-down() {
+  }
 
-//   &:hover {
-//     &:not([disabled]) {
-//       box-shadow: var(--tile-shadow-hover);
-//     }
-//   }
-//   &:active {
-//     transform: scale(0.94);  outline: none;
-//   }
+  &:hover {
+    &:not([disabled]) {
+      box-shadow: var(--tile-shadow-hover);
+    }
+  }
+  &:active {
+    transform: scale(0.94);
+    outline: none;
+  }
 
-//   &[disabled] {
-//     opacity: 0.4;
-//     cursor: not-allowed;
-//   }
-// }
+  &[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
 
 details {
   border-radius: var(--global-border-radius);
@@ -123,12 +134,7 @@ details {
   justify-content: center;
 }
 
-textarea {
-  width: 100%;
-  border: 1px solid #eee;
-  min-height: 100px;
-  padding: 0.4rem 0.5rem;
-}
+
 
 .w-100 {
   width: 100%;

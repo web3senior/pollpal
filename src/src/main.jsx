@@ -11,9 +11,9 @@ const Layout = lazy(() => import('./routes/layout.jsx'))
 const UserLayout = lazy(() => import('./routes/userLayout.jsx'))
 import Home, { loader as homeLoader } from './routes/home.jsx'
 import About from './routes/about.jsx'
-import Leaderboard from './routes/leaderboard.jsx'
-import Frends from './routes/frends.jsx'
-import Ecosystem from './routes/ecosystem.jsx'
+import Submit from './routes/submit.jsx'
+import Create from './routes/create.jsx'
+import Search from './routes/search.jsx'
 import Admin from './routes/admin.jsx'
 import Fee from './routes/fee.jsx'
 import Owned from './routes/owned.jsx'
@@ -36,23 +36,28 @@ const router = createBrowserRouter([
       {
         index: true,
         loader: homeLoader,
-        element: <Home title={`Vote, Share, Trust.`} />,
+        element: <Home title={import.meta.env.VITE_SLOGAN} />,
       },
       {
-        path: `leaderboard`,
-        element: <Leaderboard title={`Leaderboard`} />,
+        path: `submit`,
+     children:[
+      {
+        index: true,
+        element: <Search title={`Search`} />,
+      },
+      {
+        path: `:pollId`,
+        element: <Submit title={`Submit`} />,
+      }
+     ]
       },
         {
-        path: `frends`,
-        element: <Frends title={`Frends`} />,
+        path: `create`,
+        element: <Create title={`Create`} />,
       },
       {
         path: `about`,
         element: <About title={`About`} />,
-      },
-      {
-        path: `ecosystem`,
-        element: <Ecosystem title={`Ecosystem`} />,
       },
       {
         path: `admin`,

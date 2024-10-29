@@ -21,25 +21,25 @@ const links = [
   {
     name: 'Home',
     icon: null,
-    target: '',
+    target: ``,
     path: ``,
   },
   {
     name: 'Submit Vote',
     icon: null,
-    target: '',
-    path: `marketplace`,
+    target: ``,
+    path: `submit`,
   },
   {
     name: 'Create Poll',
     icon: null,
-    target: '',
-    path: `ecosystem`,
+    target: ``,
+    path: `create`,
   },
   {
     name: 'About',
     icon: null,
-    target: '',
+    target: ``,
     path: `about`,
   },
 ]
@@ -73,12 +73,12 @@ export default function Root() {
       <Toaster />
       <ScrollRestoration />
 
-      <header className={`${styles.header}`}>
-        <div className={`${styles.header__container} __container d-flex flex-row align-items-center justify-content-between h-100 ms-depth-4`} data-width={`xxxlarge`}>
+      <header className={`${styles.header} ms-depth-4`}>
+        <div className={`${styles.header__container} __container d-flex flex-row align-items-center justify-content-between h-100`} data-width={`xxxlarge`}>
           {/* Logo */}
           <Link to={`/`}>
             <div className={`${styles['logo']} d-flex align-items-center`}>
-              <img alt={import.meta.env.VITE_TITLE} src={Logo} />
+              <img alt={import.meta.env.VITE_TITLE} src={Logo} className={`rounded`} />
               <figcaption>{import.meta.env.VITE_NAME}</figcaption>
               <figure>
                 <img src={MenuIcon} className={`${styles['logo__nav']} ms-hiddenLgUp`} onClick={() => handleOpenNav()} />
@@ -176,30 +176,24 @@ export default function Root() {
         <Outlet />
       </main>
 
-      <footer>
+      <footer className={`${styles.footer}`}>
         <ul className={`d-flex align-items-center justify-content-around`}>
           <li>
             <NavLink to={`/`} className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? `${styles.active}` : '')}>
-              <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6.43652 19.8332H9.78277V13.891H15.0903V19.8332H18.4365V10.8332L12.4365 6.31396L6.43652 10.8332V19.8332ZM4.93652 21.3332V10.0832L12.4365 4.43896L19.9365 10.0832V21.3332H13.5903V15.391H11.2828V21.3332H4.93652Z" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M180-140v-450l300-225.77L780-590v450H556.15v-267.69h-152.3V-140H180Z"/></svg>
               <span>Home</span>
             </NavLink>
           </li>
           <li>
-            <NavLink to={`leaderboard`} className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? `${styles.active}` : '')}>
-              <svg viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 19.8333H8.3365V11.8333H4V19.8333ZM9.8365 19.8333H14.1635V5.83325H9.8365V19.8333ZM15.6635 19.8333H20V13.8333H15.6635V19.8333ZM2.5 21.3333V10.3333H8.3365V4.33325H15.6635V12.3333H21.5V21.3333H2.5Z" />
-              </svg>
-              <span>Leaders</span>
+            <NavLink to={`submit`} className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? `${styles.active}` : '')}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M207.69-95.39q-30.3 0-51.3-21-21-21-21-51.3v-155.08l105.38-118.46 42.77 42.77-83.85 93.85h560.62l-82.62-92.62L720.46-440l104.15 117.23v155.08q0 30.3-21 51.3-21 21-51.3 21H207.69Zm222.08-298.23-129-131q-21.08-21.07-20.88-51.42.19-30.34 21.27-51.42l185.61-185.62q21.08-21.07 51.23-21.07t51.23 21.07l130.61 129.39q21.08 21.08 21.39 50.92.31 29.85-20.77 50.92L531.61-393q-21.07 21.08-50.92 20.77-29.84-.31-50.92-21.39Zm247.54-230.61q3.07-3.08 3.07-8.85t-3.07-8.84L546.85-771.15q-3.08-3.08-8.85-3.08t-8.85 3.08L342.31-584.31q-3.08 3.08-3.08 8.85t3.08 8.85l130.46 129.23q3.08 3.07 8.85 3.07t8.84-3.07l186.85-186.85Z"/></svg>
+              <span>Submit</span>
             </NavLink>
           </li>
           <li>
-            <NavLink to={`frends`} className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? `${styles.active}` : '')}>
-              <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18.6885 14.5831V11.5831H15.6885V10.0831H18.6885V7.08314H20.1885V10.0831H23.1885V11.5831H20.1885V14.5831H18.6885ZM9.56348 12.5254C8.60098 12.5254 7.77706 12.1827 7.09173 11.4974C6.40623 10.8119 6.06348 9.98789 6.06348 9.02539C6.06348 8.06289 6.40623 7.23897 7.09173 6.55364C7.77706 5.86814 8.60098 5.52539 9.56348 5.52539C10.526 5.52539 11.3499 5.86814 12.0352 6.55364C12.7207 7.23897 13.0635 8.06289 13.0635 9.02539C13.0635 9.98789 12.7207 10.8119 12.0352 11.4974C11.3499 12.1827 10.526 12.5254 9.56348 12.5254ZM2.06348 20.1409V17.9176C2.06348 17.428 2.19648 16.9745 2.46248 16.5571C2.72848 16.1398 3.08398 15.819 3.52898 15.5946C4.51731 15.1101 5.51439 14.7467 6.52023 14.5044C7.52606 14.2621 8.54048 14.1409 9.56348 14.1409C10.5865 14.1409 11.6009 14.2621 12.6067 14.5044C13.6126 14.7467 14.6096 15.1101 15.598 15.5946C16.043 15.819 16.3985 16.1398 16.6645 16.5571C16.9305 16.9745 17.0635 17.428 17.0635 17.9176V20.1409H2.06348ZM3.56348 18.6409H15.5635V17.9176C15.5635 17.7151 15.5048 17.5276 15.3875 17.3551C15.2701 17.1828 15.1109 17.0421 14.9097 16.9331C14.0481 16.5088 13.1696 16.1873 12.2742 15.9686C11.3787 15.7501 10.4751 15.6409 9.56348 15.6409C8.65181 15.6409 7.74823 15.7501 6.85273 15.9686C5.95739 16.1873 5.07889 16.5088 4.21723 16.9331C4.01606 17.0421 3.85681 17.1828 3.73948 17.3551C3.62214 17.5276 3.56348 17.7151 3.56348 17.9176V18.6409ZM9.56348 11.0254C10.1135 11.0254 10.5843 10.8296 10.976 10.4379C11.3676 10.0462 11.5635 9.57539 11.5635 9.02539C11.5635 8.47539 11.3676 8.00456 10.976 7.61289C10.5843 7.22122 10.1135 7.02539 9.56348 7.02539C9.01348 7.02539 8.54264 7.22122 8.15098 7.61289C7.75931 8.00456 7.56348 8.47539 7.56348 9.02539C7.56348 9.57539 7.75931 10.0462 8.15098 10.4379C8.54264 10.8296 9.01348 11.0254 9.56348 11.0254Z" />
-              </svg>
-              <span>Frends</span>
+            <NavLink to={`create`} className={({ isActive, isPending }) => (isPending ? 'pending' : isActive ? `${styles.active}` : '')}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M450-290h60v-160h160v-60H510v-160h-60v160H290v60h160v160Zm30.07 190q-78.84 0-148.21-29.92t-120.68-81.21q-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100Z"/></svg>
+              <span>Create</span>
             </NavLink>
           </li>
         </ul>
