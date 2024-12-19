@@ -1,0 +1,91 @@
+@use './../styles/components/responsive' as *;
+
+.header {
+  background-color: var(--white);
+  padding: 0 0.5rem;
+  height: 70px;
+  grid-row: 1/2;
+  grid-column: 1/1;
+  position: fixed;
+  position: -webkit-sticky;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+
+  > div {
+    height: 100%;
+  }
+}
+
+.logo {
+  column-gap: 0.5rem;
+
+  img {
+  }
+
+  h1 {
+    color: var(--black);
+    font-size: 0.95rem;
+    font-variation-settings: 'wght' 700, 'dots' 4;
+  }
+
+  small {
+    color: var(--black-200);
+    font-weight: 400;
+  }
+}
+
+.action {
+  column-gap: 0.5rem;
+
+  a,
+  button {
+    position: relative;
+    border-radius: 999px;
+    background-color: var(--black);
+    color: var(--white);
+    padding: 0.4rem;
+    font-family: var(--ff-vazir);
+    background-color: var(--black);
+    color: var(--white);
+  }
+}
+
+a.btn-account {
+}
+
+a.btn-cart {
+  span {
+    &:last-child {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      position: absolute;
+      top: -0.25em;
+      right: -0.25rem;
+
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background-color: var(--color-primary);
+
+      font-size: 9px;
+
+      border: 2px solid var(--white);
+
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+  }
+}
+
+button.btn-search {
+}
+
+@include medium-down() {
+  .page {
+    img {
+      height: 200px;
+    }
+  }
+}

@@ -1,0 +1,86 @@
+'use client'
+
+import { useEffect, useState, Suspense, useRef } from 'react'
+import { useFormStatus } from 'react-dom'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
+import { toast } from '../../../components/NextToast'
+import Heading from '../../../helper/Heading'
+import Icon from '../../../helper/MaterialIcon'
+import styles from './page.module.scss'
+
+export default function Page() {
+  const status = useFormStatus()
+  const router = useRouter()
+
+  const handleForm = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    const formData = new FormData(e.target)
+    const phone = formData.get('phone')
+    const password = formData.get('password')
+    const errors = {}
+
+    // validate the fields
+    if (phone.length < 11) {
+      errors.email = 'لطفا شماره موبایل را به صورت صحیح وارد نمادئید'
+      toast(errors.email, 'error')
+    }
+
+    if (typeof password !== 'string' || password.length < 4) {
+      errors.password = 'کلمه عبور نمی تواند کمتر از 4 باشد'
+      toast(errors.email, 'error')
+    }
+    // // return data if we have errors
+    // if (Object.keys(errors).length) {
+    //   return errors
+    // }
+
+    const post = {
+      phone: phone,
+      password: password,
+    }
+
+    try {
+      const res = await signIn(post)
+      console.log(res)
+      if (res.result) {
+        localStorage.setItem('token', JSON.stringify(res.token))
+        toast(`ورود شما با موفقیت انجام شد`, `success`)
+        router.push('/user/dashboard')
+      } else {
+        toast(`${res.message}`, `error`)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    return null
+  }
+
+  useEffect(() => {}, [])
+
+  return (
+    <div className={`${styles.page} ms-motion-slideDownIn`}>
+      <div className={`__container`} data-width={`small`}>
+        <Heading title={`Discover Polls`} subTitle={`Explore a world of diverse opinions and participate in the conversations that matter`} />
+        <div className={`${styles.card}`}>
+          <div className={`${styles.card__body}`}>
+            <form onSubmit={(e) => handleForm(e)} className={`form d-flex flex-column`} style={{ rowGap: '1rem' }}>
+
+              <div>
+                <input type={`text`} name={`id`} placeholder={`Pool Id`} required />
+              </div>
+
+              <button className="btn mt-20" type="submit">
+                {status.pending ? 'Searching...' : 'Search'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
