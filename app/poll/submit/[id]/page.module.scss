@@ -8,7 +8,9 @@
 
   height: 100%;
   background: linear-gradient(0, var(--white, #fff) 70%, var(--color-tertiary) 100%);
-  padding: .5rem;
+  padding: 0.5rem;
+
+  
 }
 
 .profile {
@@ -45,12 +47,48 @@
 }
 
 .poll {
+  p {
+    max-width: 90%;
+    text-wrap: balance;
+  }
+
   small {
     color: #758ca39d;
     background-color: var(--LUKSO);
     color: var(--white);
     padding: 0.1rem 0.45rem;
+    text-wrap: nowrap;
   }
+}
+
+ul.responses {
+  li {
+    padding: 0.45rem 1rem;
+    margin: 0.25rem 0;
+    height: 40px;
+    cursor: help;
+
+    span,
+    b {
+      will-change: transform;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      background-color: var(--color-tertiary) !important;
+    }
+  }
+}
+
+.selected {
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-tertiary);
+}
+
+.other {
+  border: 1px solid var(--black-050);
+  background-color: var(--black-025);
+  opacity: 0.6;
 }
 
 figure.logo {
@@ -86,11 +124,6 @@ figure.logo {
 
   &__body {
     padding: 0 0 1rem 0;
-
-    h1 {
-      margin-bottom: 1rem;
-      text-wrap: balance;
-    }
   }
 
   &__footer {
@@ -105,7 +138,7 @@ figure.logo {
 
 .choices {
   li {
-    border: 1px solid #f8fafb;
+    border: 1px solid var(--black-050);
     padding: 0.4rem;
     border-radius: 999px;
 
@@ -154,7 +187,7 @@ label.radio {
       justify-content: center;
       width: 16px;
       height: 16px;
-      border: 1px solid var(--color-tertiary);
+      border: 1px solid var(--black-100);
       background: #fff;
     }
 
@@ -181,6 +214,10 @@ label.radio {
 }
 
 .profile {
+  p {
+    max-width: 400px;
+    text-wrap: balance;
+  }
   figure {
     img {
     }
@@ -261,7 +298,7 @@ label.radio {
 
 @media (max-width: 600px) {
   .page {
-padding: .5rem;
+    padding: 0.5rem;
   }
 }
 

@@ -25,11 +25,11 @@ contract PollPal is Ownable(msg.sender), Pausable {
     Counters.Counter public _pollCounter;
     Counters.Counter public _respondCounter;
 
-    uint256 public fee = 1 ether;
+    uint256 public fee = 0 ether;
 
     struct PollStruct {
         string metadata;
-        string q;
+        bytes q;
         string[] choices;
         uint256 start;
         uint256 end;
@@ -47,7 +47,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
     struct PollListStruct {
         bytes32 id;
         string metadata;
-        string q;
+        bytes q;
         string[] choices;
         uint256 start;
         uint256 end;
@@ -91,32 +91,39 @@ contract PollPal is Ownable(msg.sender), Pausable {
     }
 
     constructor() {
-        // // whitelist sender
-        // address[] memory _whitelist = new address[](0);
-        // //_whitelist[0] = _msgSender();        // _whitelist[1] = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
-        // string[] memory _choices = new string[](3);
-        // _choices[0] = "Option1";
-        // _choices[1] = "Option2";
-        // _choices[2] = "Option3";
-        // _pollCounter.increment();
-        // poll[bytes32(_pollCounter.current())] = PollStruct({
-        //     metadata: "",
-        //     q: "Lorem ipsum?",
-        //     choices: _choices,
-        //     start: block.timestamp + 10,
-        //     end: block.timestamp + 1 days,
-        //     whitelist: _whitelist,
-        //     manager: _msgSender(),
-        //     limitPerAccount: 1,
-        //     isPayable: true,
-        //     token: address(0),
-        //     amount: 1 ether,
-        //     pause: false,
-        //     dt: block.timestamp,
-        //     respondCounter: 0
-        // }); // mapping(address sender => mapping(uint256 dt => string metadata)) respond;
-        // // Log form added
-        // emit PollAdded(bytes32(_pollCounter.current()), block.timestamp + 10, block.timestamp + 10 minutes, _msgSender());
+        // whitelist sender
+        address[] memory _whitelist = new address[](0);
+        //_whitelist[0] = _msgSender();        // _whitelist[1] = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
+        string[] memory _choices = new string[](3);
+        _choices[0] = "Option 1";
+        _choices[1] = "Option 2";
+        _choices[2] = "Option 3";
+        _pollCounter.increment();
+        poll[bytes32(_pollCounter.current())] = PollStruct({
+            metadata: "",
+            q: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            choices: _choices,
+            start: block.timestamp + 10,
+            end: block.timestamp + 1 days,
+            whitelist: _whitelist,
+            manager: _msgSender(),
+            limitPerAccount: 1,
+            isPayable: true,
+            token: address(0),
+            amount: 1 ether,
+            pause: false,
+            dt: block.timestamp,
+            respondCounter: 0
+        }); // mapping(address sender => mapping(uint256 dt => string metadata)) respond;
+        // Log form added
+        emit PollAdded(
+            bytes32(_pollCounter.current()),
+            "",
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            block.timestamp + 10,
+            block.timestamp + 1 days,
+            _msgSender()
+        );
     }
 
     ///@notice Update fee
@@ -175,16 +182,18 @@ contract PollPal is Ownable(msg.sender), Pausable {
         /// @notice Continue if end time is gretter than start time
         require(_end > _start, "End time must be greater than start time");
 
-        // Check the platform fee
-        if (_msgSender() != owner()) {
-            if (msg.value < fee) revert PriceNotMet(fee, msg.value);
+        // Check the platform fee if the poll is not payable.
+        if (_isPayable) {
+            if (_msgSender() != owner()) {
+                if (msg.value < fee) revert PriceNotMet(fee, msg.value);
+            }
         }
 
         // Add the form
         _pollCounter.increment();
         poll[bytes32(_pollCounter.current())] = PollStruct({
             metadata: _metadata,
-            q: _q,
+            q: bytes(_q),
             choices: _choices,
             start: _start,
             end: _end,
@@ -212,7 +221,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
     function updatePoll(
         bytes32 _pollId,
         string memory _metadata,
-        string memory _q,
+        bytes memory _q,
         string[] memory _choices,
         address[] memory _whitelist,
         uint256 _limitPerAccount,
@@ -251,27 +260,29 @@ contract PollPal is Ownable(msg.sender), Pausable {
         if (poll[_pollId].whitelist.length > 0) _authorizedSender(_pollId);
 
         /// @notice Continue if form doesn't expired
-        require(poll[_pollId].end > block.timestamp, "The entered poll ID expired");
+        if (poll[_pollId].start > block.timestamp) revert TooEarly(block.timestamp);
+
+        /// @notice Continue if form doesn't expired
+        require(poll[_pollId].end > block.timestamp, "The entered poll ID is expired");
 
         /// @notice Check if it's paused
         require(!poll[_pollId].pause, "This poll is paused");
 
         // @notice Check if the sender is repetitive
-        if (respondCounter[_pollId][_msgSender()] >= poll[_pollId].limitPerAccount) revert RepetitiveRespond(_msgSender());
-        // for (uint256 i = 0; i <= poll[_pollId].respondCounter; i++) if (respond[bytes32(i)].sender == _msgSender()) revert RepetitiveRespond(_msgSender());
+        if (respondCounter[_pollId][_msgSender()] >= poll[_pollId].limitPerAccount) revert RepetitiveResponse(_msgSender());
+        // for (uint256 i = 0; i <= poll[_pollId].respondCounter; i++) if (respond[bytes32(i)].sender == _msgSender()) revert RepetitiveResponse(_msgSender());
 
         // Transfer price to the manager of the form
         if (poll[_pollId].isPayable) {
             // if it's not true, means not free
             if (address(poll[_pollId].token) == address(0)) {
                 // means native token
-                if (msg.value < poll[_pollId].amount) {
-                    if (msg.value < poll[_pollId].amount) revert PriceNotMet(poll[_pollId].amount, msg.value);
 
-                    // Transfer native token
-                    (bool success, ) = poll[_pollId].manager.call{value: msg.value}("");
-                    require(success, "Failed");
-                }
+                if (msg.value < poll[_pollId].amount) revert PriceNotMet(poll[_pollId].amount, msg.value);
+
+                // Transfer native token
+                (bool success, ) = poll[_pollId].manager.call{value: msg.value}("");
+                require(success, "Failed");
             } else {
                 uint256 authorizedAmount = ILSP7(poll[_pollId].token).authorizedAmountFor(address(this), _msgSender());
                 if (authorizedAmount != poll[_pollId].amount) revert NotAuthorizedAmount(poll[_pollId].amount, authorizedAmount);
@@ -289,7 +300,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         _respondCounter.increment();
         respond[bytes32(_respondCounter.current())] = RespondStruct(_pollId, _metadata, _choice, _msgSender(), block.timestamp);
 
-        emit RespondAdded(_pollId, _msgSender());
+        emit RespondAdded(_pollId, poll[_pollId].respondCounter, _msgSender());
     }
 
     // Check if a poll is active
@@ -317,30 +328,33 @@ contract PollPal is Ownable(msg.sender), Pausable {
     }
 
     ///@notice Get list
-    function pollList(address _manager) public view returns (PollListStruct[] memory polls) {
+    function pollList(address _manager) public view returns (PollListStruct[] memory polls, bool) {
         PollListStruct[] memory result = new PollListStruct[](_pollCounter.current());
 
-        for (uint256 i = 0; i < _pollCounter.current(); i++) {
-            if (poll[bytes32(i + 1)].manager == _manager) {
-                result[i] = PollListStruct(
-                    bytes32(i + 1),
-                    poll[bytes32(i + 1)].metadata,
-                    poll[bytes32(i + 1)].q,
-                    poll[bytes32(i + 1)].choices,
-                    poll[bytes32(i + 1)].start,
-                    poll[bytes32(i + 1)].end,
-                    poll[bytes32(i + 1)].whitelist,
-                    poll[bytes32(i + 1)].limitPerAccount,
-                    poll[bytes32(i + 1)].amount,
-                    poll[bytes32(i + 1)].manager,
-                    poll[bytes32(i + 1)].pause,
-                    poll[bytes32(i + 1)].dt,
-                    poll[bytes32(i + 1)].respondCounter
+        bool hasPoll = false;
+
+        for (uint256 i = 1; i <= _pollCounter.current(); i++) {
+            if (poll[bytes32(i)].manager == _manager) {
+                hasPoll = true;
+                result[i - 1] = PollListStruct(
+                    bytes32(i),
+                    poll[bytes32(i)].metadata,
+                    poll[bytes32(i)].q,
+                    poll[bytes32(i)].choices,
+                    poll[bytes32(i)].start,
+                    poll[bytes32(i)].end,
+                    poll[bytes32(i)].whitelist,
+                    poll[bytes32(i)].limitPerAccount,
+                    poll[bytes32(i)].amount,
+                    poll[bytes32(i)].manager,
+                    poll[bytes32(i)].pause,
+                    poll[bytes32(i)].dt,
+                    poll[bytes32(i)].respondCounter
                 );
             }
         }
 
-        return result;
+        return (result, hasPoll);
     }
 
     ///@notice Get poll
@@ -354,13 +368,20 @@ contract PollPal is Ownable(msg.sender), Pausable {
     }
 
     ///@notice Get respond list
-    function respondList(bytes32 _pollId) public view returns (RespondListStruct[] memory list) {
-        uint256 totalRespond = poll[_pollId].respondCounter;
-        RespondListStruct[] memory result = new RespondListStruct[](totalRespond);
+    function responseList(bytes32 _pollId) public view returns (RespondListStruct[] memory list) {
+        uint256 totalResponse = poll[_pollId].respondCounter;
+        RespondListStruct[] memory result = new RespondListStruct[](totalResponse);
 
-        for (uint256 i = 0; i <= totalRespond; i++) {
-            if (respond[bytes32(i + 1)].pollId == _pollId) {
-                result[i] = RespondListStruct({respondId: bytes32(i + 1), pollId: respond[bytes32(i + 1)].pollId, metadata: respond[bytes32(i + 1)].metadata, choice: respond[bytes32(i + 1)].choice, sender: respond[bytes32(i + 1)].sender, dt: respond[bytes32(i + 1)].dt});
+        for (uint256 i = 1; i <= totalResponse; i++) {
+            if (respond[bytes32(i)].pollId == _pollId) {
+                result[i - 1] = RespondListStruct({
+                    respondId: bytes32(i),
+                    pollId: respond[bytes32(i)].pollId,
+                    metadata: respond[bytes32(i)].metadata,
+                    choice: respond[bytes32(i)].choice,
+                    sender: respond[bytes32(i)].sender,
+                    dt: respond[bytes32(i)].dt
+                });
             }
         }
 

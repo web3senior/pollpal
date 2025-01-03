@@ -13,15 +13,22 @@
   width: auto;
   z-index: 1;
   padding: 0.5rem 1rem;
+  cursor: pointer;
 
+  &[disabled] {
+    opacity: 0.4;
+  }
   &:hover {
-    box-shadow: none;
+    &:not([disabled]) {
+      box-shadow: none;
+    }
   }
 
   &:active {
-    transform: scale(0.94);
+    &:not([disabled]) {
+      transform: scale(0.95);
+    }
   }
-  cursor: pointer;
 }
 
 .btn-reset {
@@ -48,7 +55,7 @@
   }
 
   &:active {
-    transform: scale(0.94);
+    transform: scale(0.95);
   }
   cursor: pointer;
 }
@@ -76,7 +83,7 @@
     }
   }
   &:active {
-    transform: scale(0.94);
+    transform: scale(0.95);
   }
 
   &[disabled] {

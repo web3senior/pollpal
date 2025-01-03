@@ -6,7 +6,7 @@ import styles from './Header.module.scss'
 
 export default function Header() {
   return (
-    <header className={`${styles.header}`}>
+    <header className={`${styles.header} ms-depth-8`}>
       <div className={`__container d-flex align-items-center justify-content-between`} data-width={`xlarge`}>
         <Link href={`/`} className={`${styles.logo} d-flex align-items-center justify-content-center`}>
           <figure className={`d-flex align-items-center justify-content-center`}>

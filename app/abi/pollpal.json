@@ -225,7 +225,18 @@
 				"type": "address"
 			}
 		],
-		"name": "RepetitiveRespond",
+		"name": "RepetitiveResponse",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "now",
+				"type": "uint256"
+			}
+		],
+		"name": "TooEarly",
 		"type": "error"
 	},
 	{
@@ -294,7 +305,7 @@
 				"type": "uint256"
 			},
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "address",
 				"name": "sender",
 				"type": "address"
@@ -313,7 +324,7 @@
 				"type": "bytes32"
 			},
 			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "address",
 				"name": "sender",
 				"type": "address"
@@ -340,6 +351,12 @@
 			},
 			{
 				"indexed": false,
+				"internalType": "uint256",
+				"name": "totalResponse",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
 				"internalType": "address",
 				"name": "sender",
 				"type": "address"
@@ -454,9 +471,9 @@
 				"type": "string"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes",
 				"name": "_q",
-				"type": "string"
+				"type": "bytes"
 			},
 			{
 				"internalType": "string[]",
@@ -689,9 +706,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
+						"internalType": "bytes",
 						"name": "q",
-						"type": "string"
+						"type": "bytes"
 					},
 					{
 						"internalType": "string[]",
@@ -823,9 +840,9 @@
 				"type": "string"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes",
 				"name": "q",
-				"type": "string"
+				"type": "bytes"
 			},
 			{
 				"internalType": "uint256",
@@ -947,9 +964,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
+						"internalType": "bytes",
 						"name": "q",
-						"type": "string"
+						"type": "bytes"
 					},
 					{
 						"internalType": "string[]",
@@ -1005,6 +1022,11 @@
 				"internalType": "struct PollPal.PollListStruct[]",
 				"name": "polls",
 				"type": "tuple[]"
+			},
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -1110,7 +1132,7 @@
 				"type": "bytes32"
 			}
 		],
-		"name": "respondList",
+		"name": "responseList",
 		"outputs": [
 			{
 				"components": [

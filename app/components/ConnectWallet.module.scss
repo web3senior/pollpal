@@ -2,10 +2,10 @@
 
 .connect {
   button {
-    will-change: transform;
     height: 40px;
     color: var(--white, #fff);
     background-color: #0e76fd;
+    will-change: transform;
     transition: transform 0.2s ease;
     font-weight: 500;
     border-radius: var(--global-border-radius);

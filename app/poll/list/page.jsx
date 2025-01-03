@@ -47,8 +47,6 @@ export default function Page({ params, searchParams }) {
 
   const getPoll = async (pollId) => await contract.methods.poll(pollId).call()
 
-  const getPoll = async (pollId) => await contract.methods.poll(pollId).call()
-
   const handleCreatePoll = async (e) => {
     e.preventDefault()
 

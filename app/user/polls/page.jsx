@@ -8,10 +8,8 @@ import { useAuth, provider } from '../../contexts/AuthContext'
 import Heading from '../../components/Heading'
 import { Loading as CustomLoading } from './../../components/Loading'
 import Icon from './../../helper/MaterialIcon'
-import Web3 from 'web3'
 import moment from 'moment-timezone'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
+import Web3 from 'web3'
 import styles from './page.module.scss'
 import toast, { Toaster } from 'react-hot-toast'
 import { useEffect, useState } from 'react'
@@ -21,6 +19,8 @@ const pinata = new PinataSDK({
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI3YmI1ZGY5MC1kMjc2LTQ4ODQtODFiOS0yMTU0YjBmNGFmMTMiLCJlbWFpbCI6ImluZm9AYXJhdHRhLmRldiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJkODIwZGU1MDljYmI3MjgyODBkYyIsInNjb3BlZEtleVNlY3JldCI6ImQ5ZjU5ZmExMGRkNzY3MjE1MGFiN2NjZGVjOTFiNDFmODM3MmRiMmUzYmE1YjU3NTI2OTgyOTNlMWY5MGEyYTAiLCJleHAiOjE3NjY2MTcyNjN9.lcNMwKGguao_AQyxovCMhWXXnL8PByzghcmfit7wJuk',
   pinataGateway: 'example-gateway.mypinata.cloud',
 })
+const web3 = new Web3(window.lukso)
+const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
 
 export default function Page({ params, searchParams }) {
   const status = useFormStatus()
@@ -115,7 +115,6 @@ export default function Page({ params, searchParams }) {
     const now = await contract.methods.getNow().call()
     console.log(now, moment.unix(now).utc().format())
 
-
     // try {
     //   const t = toast.loading(`Uploading to IPFS`)
     //   const upload = await pinata.upload.file(formData.get(`file`))
@@ -138,12 +137,8 @@ export default function Page({ params, searchParams }) {
           '',
           formData.get(`q`),
           formData.getAll(`choice`),
-          moment((formData.get(`start`)))
-            .utc()
-            .unix(),
-          moment((formData.get(`end`)))
-            .utc()
-            .unix(),
+          moment(formData.get(`start`)).utc().unix(),
+          moment(formData.get(`end`)).utc().unix(),
           [], //  formData.get(`whitelist`),
           formData.get(`limitPerAccount`),
           formData.get(`isPayable`),
@@ -229,11 +224,12 @@ export default function Page({ params, searchParams }) {
         <div className={`grid grid--fit ${styles['product']} mt-10`} style={{ '--data-width': `200px` }}>
           {polls &&
             polls.length > 0 &&
+            polls[1] &&
             polls.map((item, i) => (
               <div key={i} className={`card ${styles['card']} mt-100`}>
                 {console.log(item)}
                 <div className={`card__body`}>
-                  <h4>{item.q}</h4>
+                  <p>{web3.utils.toUtf8(`${item.q}`)}</p>
                   <ul>
                     <li>
                       <small>Start {moment.unix(item[4]).utc().fromNow()}</small>
@@ -241,7 +237,11 @@ export default function Page({ params, searchParams }) {
                     <li>
                       <small>Expire {moment.unix(item[5]).utc().fromNow()}</small>
                     </li>
-                    <li><Link href={`/poll/submit/${item.id}`} className={`text-primary`}>View</Link></li>
+                    <li>
+                      <Link href={`/poll/submit/${item.id}`} className={`text-primary`}>
+                        View
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               </div>
