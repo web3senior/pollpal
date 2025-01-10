@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import { useFormStatus } from 'react-dom'
+import { useRouter } from 'next/navigation'
 import ABI from './../../../abi/pollpal.json'
 import { useAuth, provider } from '../../../contexts/AuthContext'
 import Heading from '../../../components/Heading'
@@ -31,6 +33,7 @@ export default function Page({ params, searchParams }) {
   // const product = await getProductList(filter)
   const auth = useAuth()
   const createFormRef = useRef()
+  const router = useRouter()
 
   const slugify = (str) => {
     str = str.replace(/^\s+|\s+$/g, '') // trim leading/trailing white space
@@ -89,10 +92,9 @@ export default function Page({ params, searchParams }) {
     setOptions({ list: newOptions })
   }
 
-  
   const delOption = (e, index) => {
     let newOptions = []
-    options.list.map((item,i) =>{
+    options.list.map((item, i) => {
       if (i !== index) newOptions.push(`Choice ${newOptions.length + 1}`)
     })
     setOptions({ list: newOptions })
@@ -151,7 +153,7 @@ export default function Page({ params, searchParams }) {
           moment(formData.get(`end`)).utc().unix(),
           formData.get(`whitelist`).length > 0 ? formData.get(`whitelist`).split(`,`) : [],
           formData.get(`limitPerAccount`),
-          formData.get(`isPayable`),
+          formData.get(`isPayable`) === `true` ? true : false,
           formData.get(`token`),
           web3.utils.toWei(formData.get(`amount`), `ether`),
           false
@@ -169,6 +171,7 @@ export default function Page({ params, searchParams }) {
           // })
 
           toast.success(`Done`)
+          router.push(`/poll/list`)
 
           //   e.target.innerText = `Connect & Claim`
           toast.dismiss(t)
@@ -209,7 +212,6 @@ export default function Page({ params, searchParams }) {
     // showButton.addEventListener('click', () => {
     //   dialog.showModal()
     // })
-
     // // "Close" button closes the dialog
     // closeButton.addEventListener('click', () => {
     //   dialog.close()
@@ -218,11 +220,10 @@ export default function Page({ params, searchParams }) {
 
   return (
     <div className={`${styles.page} ms-motion-slideDownIn`}>
-
       <div className={`__container`} data-width={`large`}>
         <div className={`card`}>
           <div className={`card__header d-flex`} style={{ columnGap: `.5rem` }}>
-          Create New Poll
+            Create New Poll
           </div>
           <div className={`card__body`}>
             <form ref={createFormRef} className={`form`} onSubmit={(e) => handleCreatePoll(e)}>
@@ -240,12 +241,14 @@ export default function Page({ params, searchParams }) {
                     return (
                       <div key={i} className={`d-flex mt-10 grid--gap-1`}>
                         <input type="text" name={`choice`} id="" defaultValue={item} placeholder={`${item}`} />
-                        <button type={`button`} className='btn' onClick={(e) => delOption(e, i)}>Delete</button>
+                        <button type={`button`} className="btn" onClick={(e) => delOption(e, i)}>
+                          Delete
+                        </button>
                       </div>
                     )
                   })}
                 <div className={`mt-40 mb-10 d-f-c`}>
-                  <button className='btn' type="button" onClick={(e) => addOption(e)}>
+                  <button className="btn" type="button" onClick={(e) => addOption(e)}>
                     Add option
                   </button>
                 </div>
@@ -260,7 +263,7 @@ export default function Page({ params, searchParams }) {
               </div>
               <div>
                 <label htmlFor={`whitelist`}>Whitelist</label>
-                <input type={`text`} name={`whitelist`} defaultValue={``} placeholder='0x0, 0x1, 0x2, ..., 0xn' />
+                <input type={`text`} name={`whitelist`} defaultValue={``} placeholder="0x0, 0x1, 0x2, ..., 0xn" />
                 <small>Split addresses with comma ,</small>
               </div>
 
@@ -274,15 +277,15 @@ export default function Page({ params, searchParams }) {
               <div>
                 <label htmlFor={`isPayable`}>Is payable</label>
                 <select name={`isPayable`} id="">
-                  <option value={false}>No</option>
-                  <option value={true}>Yes</option>
+                  <option value={`false`}>No</option>
+                  <option value={`true`}>Yes</option>
                 </select>
               </div>
               <div>
                 <label htmlFor={`token`}>Token</label>
-              <select name="token" id="">
-                <option value={`0x0000000000000000000000000000000000000000`}>$LYX</option>
-              </select>
+                <select name="token" id="">
+                  <option value={`0x0000000000000000000000000000000000000000`}>$LYX</option>
+                </select>
               </div>
               <div>
                 <label htmlFor={`amount`}>Amount</label>
