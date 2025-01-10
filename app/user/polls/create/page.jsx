@@ -256,6 +256,7 @@ export default function Page({ params, searchParams }) {
               <div>
                 <label htmlFor={`start`}>Start</label>
                 <input type={`datetime-local`} name={`start`} required />
+                <small>Start time must be at least 3 minutes from now.</small>
               </div>
               <div>
                 <label htmlFor={`end`}>End</label>
