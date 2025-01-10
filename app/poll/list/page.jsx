@@ -151,6 +151,7 @@ export default function Page({ params, searchParams }) {
   }
 
   useEffect(() => {
+    console.log(`Hi`)
     // const dialog = document.querySelector('dialog')
     // const showButton = document.querySelector('dialog + button')
     // const closeButton = document.querySelector('dialog button')
