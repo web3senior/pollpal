@@ -201,7 +201,7 @@ export default function Page({ params, searchParams }) {
           {polls &&
             polls.length > 0 &&
             polls.map((item, i) => (
-              <div key={i} className={`card ${styles['card']}`}>
+              <div key={i} className={`card`} data-margin={`none`}>
                 <div className={`card__body`}>
                   <div className={`d-flex flex-row align-items-center justify-content-between`}>
                     <figure className={`d-flex flex-row align-items-center justify-content-start`} style={{ columnGap: `.5rem` }}>
@@ -223,7 +223,7 @@ export default function Page({ params, searchParams }) {
                     <small className={`rounded`}>{moment.unix(item.returnValues.start).utc().fromNow()}</small>
                   </div>
 
-                  <h4>{item.returnValues.q}</h4>
+                  <h4>{item.returnValues.q.length > 100 ? item.returnValues.q.slice(0, 100) + `...` : item.returnValues.q}</h4>
                   <ul>
                     <li>
                       <small>Expire {moment.unix(item.returnValues.end).utc().fromNow()}</small>

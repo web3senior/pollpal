@@ -46,6 +46,23 @@
   }
 }
 
+.wallet-container {
+  gap:1rem;
+  align-items: stretch;
+}
+
+.btn-search {
+  background-color: var(--white, #FFF);
+  border-radius: 999px;
+  display: block;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @include medium-down() {
   .logo {
     img {

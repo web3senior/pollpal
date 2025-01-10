@@ -19,7 +19,7 @@ export default function ConnectWallet() {
       {!auth.wallet && <button onClick={auth.connect}>Connect</button>}
 
       {auth.profile && (
-        <Link href={`/user/polls`}>
+        <Link href={`/user/dashboard`}>
           <ul className={`${styles['wallet']} d-flex flex-row align-items-center justify-content-end`}>
             <li className={`d-flex flex-row align-items-center justify-content-center`}>
               {auth.balance}

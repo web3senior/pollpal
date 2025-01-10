@@ -25,7 +25,8 @@ export default function Page() {
   const [response, setResponse] = useState()
   const [isExpired, setIsExpired] = useState()
   const [score, setScore] = useState()
-  const [maxScoreIndex, setMaxScoreIndex] = useState()
+  const [maxScoreIndex, setMaxScoreIndex] = useState([])
+  const [whitelistedProfile, setWhitelistedProfile] = useState()
   // const status = useFormStatus()
   const router = useRouter()
   const auth = useAuth()
@@ -91,17 +92,27 @@ export default function Page() {
     return contract.methods
       .getPoll(params.id)
       .call()
-      .then((result) => {
-        console.log(`polls:`, result)
-        setPoll(result)
+      .then(async (poll) => {
+        console.log(`polls:`, poll)
+        setPoll(poll)
 
         // Fetch sender profile
-        auth.fetchProfile(result.manager).then((result) => {
-          console.log(result)
-          setProfile(result)
-        })
+        auth.fetchProfile(poll.manager).then((profile) => setProfile(profile))
 
-        return result
+        // Read whitelisted accounts' profile
+        let whitelisted_profile = []
+        await Promise.all(
+          poll.whitelist.map((whitelistedAccount, i) => {
+            return auth.fetchProfile(whitelistedAccount).then((profile) => {
+              console.log(profile)
+              whitelisted_profile.push(Object.assign(profile, whitelistedAccount))
+            })
+          })
+        )
+
+        setWhitelistedProfile(whitelisted_profile)
+
+        return poll
       })
   }
 
@@ -130,6 +141,7 @@ export default function Page() {
 
   useEffect(() => {
     getIsExpired(params.id).then((status) => {
+      console.log(status)
       setIsExpired(status)
     })
 
@@ -138,22 +150,29 @@ export default function Page() {
         console.log(responses)
 
         let choices_score = new Array(poll.choices.length).fill(0)
+        
+   
         responses.map((response) => {
           choices_score[response.choice] += 1
         })
         setScore(choices_score)
 
+        console.log(choices_score)
+     // Is there any responses?
+     if (responses.length > 0) {
         let max = choices_score[0]
-        let maxIndex
+        let maxIndex = []
 
         for (let m = 0; m < choices_score.length; m++) {
-          if (choices_score[m] > max) {
-            maxIndex = m
+          if (choices_score[m] >= max) {
+            maxIndex.push(m)
             max = choices_score[m]
           }
         }
+        console.log(maxIndex)
 
         setMaxScoreIndex(maxIndex)
+     }
       })
     })
   }, [])
@@ -239,10 +258,10 @@ export default function Page() {
                         score &&
                         score.length > 0 &&
                         score.map((scoreItem, i) => {
-                          const scorePercentage = ((scoreItem / response.length) * 100).toFixed(2)
+                          const scorePercentage = response.length > 0 ? ((scoreItem / response.length) * 100).toFixed(2) : 0
 
                           return (
-                            <li key={i} className={`d-flex align-items-center justify-content-between rounded ${maxScoreIndex === i ? styles['selected'] : styles['other']}`}>
+                            <li key={i} className={`d-flex align-items-center justify-content-between rounded ${maxScoreIndex.length > 0 && maxScoreIndex[i] === i ? styles['selected'] : styles['other']}`}>
                               <span>{poll.choices[i]}</span>
                               <b>{scorePercentage}%</b>
                             </li>
@@ -280,7 +299,7 @@ export default function Page() {
                       <ul className={`d-flex align-items-center`} style={{ columnGap: `.4rem` }}>
                         <li>Total Votes: {poll.respondCounter}</li>
                         <li>•</li>
-                        <li>Expire {moment.unix(poll.end).utc().fromNow()}</li>
+                        <li>Expiration: {moment.unix(poll.end).utc().fromNow()}</li>
                       </ul>
                     </div>
 
@@ -300,7 +319,48 @@ export default function Page() {
           <Shimmer style={{ width: `100%`, height: `500px`, marginTop: `1rem` }} />
         )}
 
-        {isExpired && poll && response && (
+        {/* Whitelisted profiles */}
+        {poll && poll.whitelist.length > 0 && (
+          <>
+            <div className={`card`}>
+              <div className={`card__header`}>
+                <div className={`d-flex align-items-start justify-content-between`} style={{ gap: `1rem` }}>
+                  <p>This poll is whitelisted</p>
+                  <small className={`text-secondary`}>{poll.whitelist.length} profiles</small>
+                </div>
+              </div>
+              <div className={`card__body grid grid--fit grid--gap-1`} style={{ '--data-width': `200px` }}>
+                {whitelistedProfile &&
+                  whitelistedProfile
+                    .filter((item, i) => i < 3)
+                    .map((item, i) => {
+                      return (
+                        <div key={i} className={`${styles['whitelisted-profile']}`}>
+                          <figure className={`d-flex align-items-center`} style={{ gap: `.7rem` }}>
+                            <Image
+                              key={i}
+                              className={`rounded ms-depth-4`}
+                              alt={item.LSP3Profile.name}
+                              title={`@${item.LSP3Profile.name}`}
+                              width={40}
+                              height={40}
+                              src={`https://ipfs.io/ipfs/${item.LSP3Profile.profileImage.length > 0 && item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
+                            />
+                            <figcaption className={`d-flex flex-column`}>
+                              {profile.LSP3Profile.name} <br />
+                              <i style={{ fontSize: `10px` }}>{auth.wallet && `${auth.wallet.slice(0, 4)}...${auth.wallet.slice(38)}`}</i>
+                            </figcaption>
+                          </figure>
+                        </div>
+                      )
+                    })}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Response rate for whitelisted polls */}
+        {isExpired && poll && response && poll.whitelist.length > 0 && (
           <>
             <div className={`card`}>
               <div className={`card__header`}>
@@ -308,7 +368,7 @@ export default function Page() {
                 <small className={`text-secondary`}>Only for whitelisted polls</small>
               </div>
               <div className={`card__body`} title={`(Number of Responses / Total Number of whitelist) x 100`}>
-                {((response.length / poll.whitelist.length) * 100 || 100).toFixed(2)}%
+                {response.length > 0 ? ((response.length / poll.whitelist.length) * 100 || 100).toFixed(2) : 0}%
               </div>
             </div>
           </>

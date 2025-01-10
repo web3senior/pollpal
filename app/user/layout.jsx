@@ -7,7 +7,6 @@ export default function UserLayout({ children }) {
   return (
     <>
       <NextToast />
-      test
       <AuthProvider>
         <main className={`${styles.main}`}>{children}</main>
       </AuthProvider>

@@ -19,7 +19,12 @@ export default function Header() {
           </svg>
         </Link>
 
+        <div className={`${styles['wallet-container']} d-flex align-items-center`}>
+        <a href={`/poll/search`} className={`${styles['btn-search']}`}>
+        <Icon name={`search`}/>
+        </a>
         <ConnectWallet />
+        </div>
       </div>
     </header>
   )

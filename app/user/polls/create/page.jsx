@@ -3,16 +3,16 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useFormStatus } from 'react-dom'
-import ABI from './../../abi/pollpal.json'
-import { useAuth, provider } from '../../contexts/AuthContext'
-import Heading from '../../components/Heading'
-import { Loading as CustomLoading } from './../../components/Loading'
-import Icon from './../../helper/MaterialIcon'
+import ABI from './../../../abi/pollpal.json'
+import { useAuth, provider } from '../../../contexts/AuthContext'
+import Heading from '../../../components/Heading'
+import { Loading as CustomLoading } from '../../../components/Loading'
+import Icon from '../../../helper/MaterialIcon'
 import moment from 'moment-timezone'
 import Web3 from 'web3'
 import styles from './page.module.scss'
 import toast, { Toaster } from 'react-hot-toast'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PinataSDK } from 'pinata-web3'
 const pinata = new PinataSDK({
   pinataJwt:
@@ -30,6 +30,7 @@ export default function Page({ params, searchParams }) {
   // const page = filter.page
   // const product = await getProductList(filter)
   const auth = useAuth()
+  const createFormRef = useRef()
 
   const slugify = (str) => {
     str = str.replace(/^\s+|\s+$/g, '') // trim leading/trailing white space
@@ -88,6 +89,15 @@ export default function Page({ params, searchParams }) {
     setOptions({ list: newOptions })
   }
 
+  
+  const delOption = (e, index) => {
+    let newOptions = []
+    options.list.map((item,i) =>{
+      if (i !== index) newOptions.push(`Choice ${newOptions.length + 1}`)
+    })
+    setOptions({ list: newOptions })
+  }
+
   const handleCreatePoll = async (e) => {
     e.preventDefault()
 
@@ -139,7 +149,7 @@ export default function Page({ params, searchParams }) {
           formData.getAll(`choice`),
           moment(formData.get(`start`)).utc().unix(),
           moment(formData.get(`end`)).utc().unix(),
-          [], //  formData.get(`whitelist`),
+          formData.get(`whitelist`).length > 0 ? formData.get(`whitelist`).split(`,`) : [],
           formData.get(`limitPerAccount`),
           formData.get(`isPayable`),
           formData.get(`token`),
@@ -204,56 +214,18 @@ export default function Page({ params, searchParams }) {
     // closeButton.addEventListener('click', () => {
     //   dialog.close()
     // })
-
-    getPollList().then(async (res) => {
-      setPolls(res)
-    })
   }, [])
 
   return (
     <div className={`${styles.page} ms-motion-slideDownIn`}>
-      <dialog>
-        <div className={`${styles.dialog}`}>
-          <button autoFocus>Close</button>
-          <p>This modal dialog has a groovy backdrop!</p>
-        </div>
-      </dialog>
-      <button>Show the dialog</button>
 
       <div className={`__container`} data-width={`large`}>
-        <div className={`grid grid--fit ${styles['product']} mt-10`} style={{ '--data-width': `200px` }}>
-          {polls &&
-            polls.length > 0 &&
-            polls[1] &&
-            polls.map((item, i) => (
-              <div key={i} className={`card ${styles['card']} mt-100`}>
-                {console.log(item)}
-                <div className={`card__body`}>
-                  <p>{web3.utils.toUtf8(`${item.q}`)}</p>
-                  <ul>
-                    <li>
-                      <small>Start {moment.unix(item[4]).utc().fromNow()}</small>
-                    </li>
-                    <li>
-                      <small>Expire {moment.unix(item[5]).utc().fromNow()}</small>
-                    </li>
-                    <li>
-                      <Link href={`/poll/submit/${item.id}`} className={`text-primary`}>
-                        View
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            ))}
-        </div>
-
-        <div className={`card mt-10`}>
+        <div className={`card`}>
           <div className={`card__header d-flex`} style={{ columnGap: `.5rem` }}>
-            Create a new poll
+          Create New Poll
           </div>
           <div className={`card__body`}>
-            <form className={`form`} onSubmit={(e) => handleCreatePoll(e)}>
+            <form ref={createFormRef} className={`form`} onSubmit={(e) => handleCreatePoll(e)}>
               {/* <div>
                 <input type="file" name="file" id="" />
               </div> */}
@@ -266,14 +238,14 @@ export default function Page({ params, searchParams }) {
                 {options &&
                   options.list.map((item, i) => {
                     return (
-                      <div key={i} className={`d-flex mt-10`}>
+                      <div key={i} className={`d-flex mt-10 grid--gap-1`}>
                         <input type="text" name={`choice`} id="" defaultValue={item} placeholder={`${item}`} />
-                        <button>delete</button>
+                        <button type={`button`} className='btn' onClick={(e) => delOption(e, i)}>Delete</button>
                       </div>
                     )
                   })}
                 <div className={`mt-40 mb-10 d-f-c`}>
-                  <button type="button" onClick={(e) => addOption(e)}>
+                  <button className='btn' type="button" onClick={(e) => addOption(e)}>
                     Add option
                   </button>
                 </div>
@@ -288,7 +260,8 @@ export default function Page({ params, searchParams }) {
               </div>
               <div>
                 <label htmlFor={`whitelist`}>Whitelist</label>
-                <input type={`text`} name={`whitelist`} defaultValue={`[]`} />
+                <input type={`text`} name={`whitelist`} defaultValue={``} placeholder='0x0, 0x1, 0x2, ..., 0xn' />
+                <small>Split addresses with comma ,</small>
               </div>
 
               <div>
@@ -301,20 +274,22 @@ export default function Page({ params, searchParams }) {
               <div>
                 <label htmlFor={`isPayable`}>Is payable</label>
                 <select name={`isPayable`} id="">
-                  <option value="">No</option>
-                  <option value="">Yes</option>
+                  <option value={false}>No</option>
+                  <option value={true}>Yes</option>
                 </select>
               </div>
               <div>
                 <label htmlFor={`token`}>Token</label>
-                <input type={`text`} name={`token`} defaultValue={`0xE570375908C46597CF5BBeA3a9E8b694E1E57158`} />
+              <select name="token" id="">
+                <option value={`0x0000000000000000000000000000000000000000`}>$LYX</option>
+              </select>
               </div>
               <div>
                 <label htmlFor={`amount`}>Amount</label>
                 <input type={`text`} name={`amount`} defaultValue={1} />
               </div>
               <div>
-                <button className={`btn`} type="submit">
+                <button className={`btn mt-30`} type="submit">
                   {status.pending ? 'Creating...' : 'Create'}
                 </button>
               </div>

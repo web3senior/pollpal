@@ -13,6 +13,13 @@
   
 }
 
+// Whitelisted profile
+.whitelisted-profile {
+  background-color: var(--global-background-color);
+  padding: 1rem;
+  border-radius: var(--global-border-radius);
+}
+
 .profile {
   > div {
     position: relative;

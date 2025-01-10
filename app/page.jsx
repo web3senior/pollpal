@@ -78,7 +78,6 @@ export default async function Page() {
           <div className={`d-f-c flex-column`} style={{ rowGap: `1rem` }}>
             <h2>Polling Made Easy</h2>
             <p>Create polls in seconds. Share your voice with the world.</p>
-            <button className={`btn`}>Get started</button>
           </div>
         </div>
       </div>
