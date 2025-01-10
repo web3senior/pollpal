@@ -46,7 +46,7 @@ export default async function Page() {
             </Link>
           </li>
           <li>
-            <Link href={`/poll/create`}>
+            <Link href={`/user/polls/create`}>
               <Icon name={`add_circle`} />
               Create a Poll
             </Link>
