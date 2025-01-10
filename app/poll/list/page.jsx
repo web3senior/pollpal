@@ -151,7 +151,6 @@ export default function Page({ params, searchParams }) {
   }
 
   useEffect(() => {
-    console.log(`Hi`)
     // const dialog = document.querySelector('dialog')
     // const showButton = document.querySelector('dialog + button')
     // const closeButton = document.querySelector('dialog button')
@@ -213,7 +212,7 @@ export default function Page({ params, searchParams }) {
                         width={40}
                         height={40}
                         priority
-                        src={`https://ipfs.io/ipfs/${item.LSP3Profile.profileImage.length > 0 && item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
+                        src={`https://ipfs.io/ipfs/${item.LSP3Profile.profileImage.length > 0 ? item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', ''): 'bafkreif5hdukwj7hnuxc5o53bjfkd3im4d7ygeah4a77i5ut5ke3zyj4lu'}`}
                       />
                       <figcaption className={`d-flex flex-column`}>
                         {item.LSP3Profile.name} <br />

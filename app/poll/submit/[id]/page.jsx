@@ -193,7 +193,7 @@ export default function Page() {
                   width={40}
                   height={40}
                   priority
-                  src={`https://ipfs.io/ipfs/${profile.LSP3Profile.profileImage.length > 0 && profile.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
+                  src={`https://ipfs.io/ipfs/${profile.LSP3Profile.profileImage.length > 0 ? profile.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', ''): 'bafkreif5hdukwj7hnuxc5o53bjfkd3im4d7ygeah4a77i5ut5ke3zyj4lu'}`}
                 />
                 <figcaption className={`d-flex flex-column`}>
                   {profile.LSP3Profile.name} <br />
