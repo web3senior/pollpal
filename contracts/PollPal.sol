@@ -35,7 +35,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         uint256 end;
         address[] whitelist;
         address manager;
-        uint256 limitPerAccount;
+        uint256 votingLimit;
         bool isPayable;
         address token;
         uint256 amount;
@@ -52,7 +52,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         uint256 start;
         uint256 end;
         address[] whitelist;
-        uint256 limitPerAccount;
+        uint256 votingLimit;
         uint256 price;
         address manager;
         bool pause;
@@ -107,7 +107,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
             end: block.timestamp + 1 days,
             whitelist: _whitelist,
             manager: _msgSender(),
-            limitPerAccount: 1,
+            votingLimit: 1,
             isPayable: true,
             token: address(0),
             amount: 1 ether,
@@ -170,7 +170,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         uint256 _start,
         uint256 _end,
         address[] memory _whitelist,
-        uint256 _limitPerAccount,
+        uint256 _votingLimit,
         bool _isPayable,
         address _token, // if left empty means native token, LYX
         uint256 _amount,
@@ -199,7 +199,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
             end: _end,
             whitelist: _whitelist,
             manager: _msgSender(),
-            limitPerAccount: _limitPerAccount,
+            votingLimit: _votingLimit,
             isPayable: _isPayable,
             token: _token,
             amount: _amount,
@@ -224,7 +224,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         bytes memory _q,
         string[] memory _choices,
         address[] memory _whitelist,
-        uint256 _limitPerAccount,
+        uint256 _votingLimit,
         bool _isPayable,
         address _token,
         uint256 _amount,
@@ -234,7 +234,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         poll[_pollId].q = _q;
         poll[_pollId].choices = _choices;
         poll[_pollId].whitelist = _whitelist;
-        poll[_pollId].limitPerAccount = _limitPerAccount;
+        poll[_pollId].votingLimit = _votingLimit;
         poll[_pollId].isPayable = _isPayable;
         poll[_pollId].token = _token;
         poll[_pollId].amount = _amount;
@@ -269,7 +269,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         require(!poll[_pollId].pause, "This poll is paused");
 
         // @notice Check if the sender is repetitive
-        if (respondCounter[_pollId][_msgSender()] >= poll[_pollId].limitPerAccount) revert RepetitiveResponse(_msgSender());
+        if (respondCounter[_pollId][_msgSender()] >= poll[_pollId].votingLimit) revert RepetitiveResponse(_msgSender());
         // for (uint256 i = 0; i <= poll[_pollId].respondCounter; i++) if (respond[bytes32(i)].sender == _msgSender()) revert RepetitiveResponse(_msgSender());
 
         // Transfer price to the manager of the form
@@ -344,7 +344,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
                     poll[bytes32(i)].start,
                     poll[bytes32(i)].end,
                     poll[bytes32(i)].whitelist,
-                    poll[bytes32(i)].limitPerAccount,
+                    poll[bytes32(i)].votingLimit,
                     poll[bytes32(i)].amount,
                     poll[bytes32(i)].manager,
                     poll[bytes32(i)].pause,

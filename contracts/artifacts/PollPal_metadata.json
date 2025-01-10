@@ -449,7 +449,7 @@
 							},
 							{
 								"internalType": "uint256",
-								"name": "limitPerAccount",
+								"name": "votingLimit",
 								"type": "uint256"
 							},
 							{
@@ -544,7 +544,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_limitPerAccount",
+						"name": "_votingLimit",
 						"type": "uint256"
 					},
 					{
@@ -682,7 +682,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "limitPerAccount",
+						"name": "votingLimit",
 						"type": "uint256"
 					},
 					{
@@ -811,7 +811,7 @@
 							},
 							{
 								"internalType": "uint256",
-								"name": "limitPerAccount",
+								"name": "votingLimit",
 								"type": "uint256"
 							},
 							{
@@ -1112,7 +1112,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_limitPerAccount",
+						"name": "_votingLimit",
 						"type": "uint256"
 					},
 					{
@@ -1426,11 +1426,11 @@
 			]
 		},
 		"PollPal.sol": {
-			"keccak256": "0x1462200ad3e05082ea64862e4527724ddcf6914e9db603a2fc973564f190fcaf",
+			"keccak256": "0x7a7190be646818fdd027b71659a30b842b37c971bbcfa4dcebe75dce149129bb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b6fd2c23260a1c4d57fe9bea543f3195f1aeb2a0451fa796352d61a0f04b10ec",
-				"dweb:/ipfs/QmXvRpsYpz6UwPKi7AbV9MwSiMb1Z8zmDrS52vSPGFMe5o"
+				"bzz-raw://d35e4501ee25bea5d7dd5493af1c6930b0bcd55bfbb3bde890bbc719367456d3",
+				"dweb:/ipfs/QmboUeBF31mGXhtDEw7wE7YHewBoW4p53Sp6pqMu1sY8jm"
 			]
 		},
 		"_constant.sol": {

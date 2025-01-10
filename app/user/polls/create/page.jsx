@@ -26,7 +26,7 @@ const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TES
 
 export default function Page({ params, searchParams }) {
   const status = useFormStatus()
-  const [polls, setPolls] = useState([])
+  const [votingLimit, setVotingLimit] = useState(1)
   const [options, setOptions] = useState({ list: [`Choice 1`, `Choice 2`, `Choice 3`] })
   // const filter = await searchParams
   // const page = filter.page
@@ -152,7 +152,7 @@ export default function Page({ params, searchParams }) {
           moment(formData.get(`start`)).utc().unix(),
           moment(formData.get(`end`)).utc().unix(),
           formData.get(`whitelist`).length > 0 ? formData.get(`whitelist`).split(`,`) : [],
-          formData.get(`limitPerAccount`),
+          formData.get(`votingLimit`),
           formData.get(`isPayable`) === `true` ? true : false,
           formData.get(`token`),
           web3.utils.toWei(formData.get(`amount`), `ether`),
@@ -269,11 +269,9 @@ export default function Page({ params, searchParams }) {
               </div>
 
               <div>
-                <label htmlFor={`limitPerAccount`}>Limit Per Account</label>
-                <input type={`text`} name={`limitPerAccount`} list={`sign-limit`} defaultValue={1} />
-                <datalist id={`sign-limit`}>
-                  <option value={1}>1</option>
-                </datalist>
+                <label htmlFor={`votingLimit`}>Voting Limit</label>
+                <input type={`number`} name={`votingLimit`} list={`sign-limit`} defaultValue={1} onChange={(e)=>setVotingLimit(e.target.value)}/>
+                <small>Each account is limited to {votingLimit} votes for this poll.</small>
               </div>
               <div>
                 <label htmlFor={`isPayable`}>Is payable</label>
@@ -290,7 +288,7 @@ export default function Page({ params, searchParams }) {
               </div>
               <div>
                 <label htmlFor={`amount`}>Amount</label>
-                <input type={`text`} name={`amount`} defaultValue={1} />
+                <input type={`number`} name={`amount`} defaultValue={0} />
               </div>
               <div>
                 <button className={`btn mt-30`} type="submit">

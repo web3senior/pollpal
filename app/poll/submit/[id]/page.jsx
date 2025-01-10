@@ -230,6 +230,7 @@ export default function Page() {
                           {poll.token === `0x0000000000000000000000000000000000000000` && <span className={`${styles['badge']}`}>{new Web3().utils.fromWei(poll.amount, `ether`)} $LYX</span>}
                         </div>
                       )}
+                      <span className={`badge badge-pill badge-primary`}>Each account can cast a maximum of {poll.limitPerAccount} votes in this poll.</span>
                     </div>
 
                     <small className={`rounded`}>{poll && <>{moment.unix(poll.start).utc().fromNow()}</>}</small>
