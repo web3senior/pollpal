@@ -276,6 +276,11 @@ label.radio {
     background-color: var(--color-primary);
     color: var(--white, #fff);
   }
+
+  &:nth-child(3) {
+    background-color: var(--area4);
+    color: var(--white, #fff);
+  }
 }
 
 .alert {

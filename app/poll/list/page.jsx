@@ -183,7 +183,7 @@ export default function Page({ params, searchParams }) {
 
   return (
     <div className={`${styles.page} ms-motion-slideDownIn`}>
-      <div className={`__container`} data-width={`large`}>
+      <div className={`__container`} data-width={`xlarge`}>
         <div className={`grid grid--fit ${styles['polls']}`} style={{ '--data-width': `400px` }}>
           {polls && polls.length < 1 && (
             <>

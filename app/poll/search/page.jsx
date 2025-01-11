@@ -53,7 +53,7 @@ export default function Page() {
   return (
     <div className={`${styles.page} ms-motion-slideDownIn`}>
       <div className={`__container`} data-width={`small`}>
-        <Heading title={`Find Your Poll`} subTitle={`Enter the poll ID (bytes32) to quickly access and cast your vote.`} />
+        <Heading title={`Find Your Poll`} subTitle={`Enter the poll ID to quickly access and cast your vote.`} />
 
         <div className={`card`}>
           <div className={`card__body`}>

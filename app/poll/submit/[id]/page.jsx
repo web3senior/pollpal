@@ -150,29 +150,28 @@ export default function Page() {
         console.log(responses)
 
         let choices_score = new Array(poll.choices.length).fill(0)
-        
-   
+
         responses.map((response) => {
           choices_score[response.choice] += 1
         })
         setScore(choices_score)
 
         console.log(choices_score)
-     // Is there any responses?
-     if (responses.length > 0) {
-        let max = choices_score[0]
-        let maxIndex = []
+        // Is there any responses?
+        if (responses.length > 0) {
+          let max = choices_score[0]
+          let maxIndex = []
 
-        for (let m = 0; m < choices_score.length; m++) {
-          if (choices_score[m] >= max) {
-            maxIndex.push(m)
-            max = choices_score[m]
+          for (let m = 0; m < choices_score.length; m++) {
+            if (choices_score[m] >= max) {
+              maxIndex.push(m)
+              max = choices_score[m]
+            }
           }
-        }
-        console.log(maxIndex)
+          console.log(maxIndex)
 
-        setMaxScoreIndex(maxIndex)
-     }
+          setMaxScoreIndex(maxIndex)
+        }
       })
     })
   }, [])
@@ -193,7 +192,7 @@ export default function Page() {
                   width={40}
                   height={40}
                   priority
-                  src={`https://ipfs.io/ipfs/${profile.LSP3Profile.profileImage.length > 0 ? profile.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', ''): 'bafkreif5hdukwj7hnuxc5o53bjfkd3im4d7ygeah4a77i5ut5ke3zyj4lu'}`}
+                  src={`https://ipfs.io/ipfs/${profile.LSP3Profile.profileImage.length > 0 ? profile.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '') : 'bafkreif5hdukwj7hnuxc5o53bjfkd3im4d7ygeah4a77i5ut5ke3zyj4lu'}`}
                 />
                 <figcaption className={`d-flex flex-column`}>
                   {profile.LSP3Profile.name} <br />
@@ -224,13 +223,15 @@ export default function Page() {
                   <div className={`d-flex align-items-start justify-content-between`} style={{ gap: `1rem` }}>
                     <div>
                       <h3>{web3.utils.toUtf8(`${poll.q}`)}</h3>
-                      {poll.isPayable && (
-                        <div className={`${styles['payable']} d-flex align-items-center`}>
-                          <span className={`${styles['badge']}`}>PAYABLE</span>
-                          {poll.token === `0x0000000000000000000000000000000000000000` && <span className={`${styles['badge']}`}>{new Web3().utils.fromWei(poll.amount, `ether`)} $LYX</span>}
-                        </div>
-                      )}
-                      <span className={`badge badge-pill badge-primary`}>Each account can cast a maximum of {poll.votingLimit} votes in this poll.</span>
+                      <div className={`${styles['payable']} d-flex align-items-center`}>
+                        {poll.isPayable && (
+                          <>
+                            <span className={`${styles['badge']}`}>PAYABLE</span>
+                            {poll.token === `0x0000000000000000000000000000000000000000` && <span className={`${styles['badge']}`}>{new Web3().utils.fromWei(poll.amount, `ether`)} $LYX</span>}
+                          </>
+                        )}
+                        <span className={`${styles['badge']}`}>Each account can cast a maximum of {poll.votingLimit} votes in this poll.</span>
+                      </div>
                     </div>
 
                     <small className={`rounded`}>{poll && <>{moment.unix(poll.start).utc().fromNow()}</>}</small>
