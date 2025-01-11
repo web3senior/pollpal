@@ -1426,11 +1426,11 @@
 			]
 		},
 		"PollPal.sol": {
-			"keccak256": "0x7a7190be646818fdd027b71659a30b842b37c971bbcfa4dcebe75dce149129bb",
+			"keccak256": "0x56158c5e0e345c0614596dc1642743b0bcf8bbf0402acfb7949731d27c2efdfc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d35e4501ee25bea5d7dd5493af1c6930b0bcd55bfbb3bde890bbc719367456d3",
-				"dweb:/ipfs/QmboUeBF31mGXhtDEw7wE7YHewBoW4p53Sp6pqMu1sY8jm"
+				"bzz-raw://9aa3887841f259183a88a828b89b76c773ac4749bf01a6664028f9c3c82a5a81",
+				"dweb:/ipfs/Qmdp35wg59Kc1VWTdmKWESym8qqrcrhvQ2wzhbHqZ17xcf"
 			]
 		},
 		"_constant.sol": {

@@ -372,15 +372,15 @@ contract PollPal is Ownable(msg.sender), Pausable {
         uint256 totalResponse = poll[_pollId].respondCounter;
         RespondListStruct[] memory result = new RespondListStruct[](totalResponse);
 
-        for (uint256 i = 1; i <= totalResponse; i++) {
-            if (respond[bytes32(i)].pollId == _pollId) {
-                result[i - 1] = RespondListStruct({
-                    respondId: bytes32(i),
-                    pollId: respond[bytes32(i)].pollId,
-                    metadata: respond[bytes32(i)].metadata,
-                    choice: respond[bytes32(i)].choice,
-                    sender: respond[bytes32(i)].sender,
-                    dt: respond[bytes32(i)].dt
+        for (uint256 i = 0; i < totalResponse; i++) {
+            if (respond[bytes32(i + 1)].pollId == _pollId) {
+                result[i] = RespondListStruct({
+                    respondId: bytes32(i + 1),
+                    pollId: respond[bytes32(i + 1)].pollId,
+                    metadata: respond[bytes32(i + 1)].metadata,
+                    choice: respond[bytes32(i + 1)].choice,
+                    sender: respond[bytes32(i + 1)].sender,
+                    dt: respond[bytes32(i + 1)].dt
                 });
             }
         }
