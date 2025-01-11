@@ -98,22 +98,19 @@ export default function Page({ params, searchParams }) {
             polls[1] &&
             polls[0].map((item, i) => (
               <div key={i} className={`card ${styles['card']}`} data-margin={`none`}>
-                {console.log(item)}
                 <div className={`card__body`}>
-                  <p>{`${item.q.length > 100 ? web3.utils.toUtf8(item.q.slice(0, 100)) + `...` : web3.utils.toUtf8(item.q)}`}</p>
-                  <ul>
+                  <p>{`${item.q.length > 100 ? web3.utils.toUtf8(item.q).slice(0, 100) + `...` : web3.utils.toUtf8(item.q)}`}</p>
+                  <ul className={`d-flex align-items-center grid--gap-1 mt-10`}>
                     <li>
-                      <small>Start Date: {moment.unix(item[4]).utc().fromNow()}</small>
+                      <small className={`badge badge-pill badge-success`}>Start Date: {moment.unix(item[4]).utc().fromNow()}</small>
                     </li>
                     <li>
-                      <small>End Date: {moment.unix(item[5]).utc().fromNow()}</small>
-                    </li>
-                    <li>
-                      <Link href={`/poll/submit/${item.id}`} className={`text-primary`}>
-                        View
-                      </Link>
+                      <small className={`badge badge-pill badge-danger`}>End Date: {moment.unix(item[5]).utc().fromNow()}</small>
                     </li>
                   </ul>
+                  <Link href={`/poll/submit/${item.id}`} className={`text-primary mt-10 d-block`}>
+                        View
+                      </Link>
                 </div>
               </div>
             ))}
