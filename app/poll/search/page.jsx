@@ -39,7 +39,7 @@ export default function Page() {
     }
 
     const web3 = new Web3(window.lukso)
-    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
     const result = await contract.methods.getPoll(id).call()
     console.log(Object.assign({result: result}, { id: id }))
     setPoll(Object.assign({result: result}, { id: id }))

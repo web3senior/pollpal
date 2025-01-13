@@ -72,7 +72,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [status, setStatus] = useState()
   const [balance, setBalance] = useState(0)
-  const web3 = new Web3(process.env.NEXT_PUBLIC_TESTNET_RPC_URL)
+  const web3 = new Web3(process.env.NEXT_PUBLIC_RPC_URL)
 
   const isWalletConnected = async () => {
     const web3 = new Web3(window.lukso)
@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     setStatus(`loading`)
-    setProvider(process.env.NEXT_PUBLIC_TESTNET_RPC_URL || window.lukso || window.ethereum)
+    setProvider(process.env.NEXT_PUBLIC_RPC_URL || window.lukso || window.ethereum)
 
     isWalletConnected().then((account) => {
       if (account !== undefined) {

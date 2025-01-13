@@ -22,7 +22,7 @@ const pinata = new PinataSDK({
   pinataGateway: 'example-gateway.mypinata.cloud',
 })
 const web3 = new Web3(window.lukso)
-const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
 
 export default function Page() {
   const status = useFormStatus()
@@ -59,7 +59,7 @@ export default function Page() {
 
   const getPollList = async () => {
     const web3 = new Web3(window.lukso)
-    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
     return await contract.methods.pollList(profile.id).call()
   }
 
@@ -119,7 +119,7 @@ export default function Page() {
     // })
     // console.log(`IPFS`, upload)
     const web3 = new Web3(window.lukso)
-    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
     const t = toast.loading(`Waiting for transaction's confirmation`)
     const formData = new FormData(e.target)
     const account = auth.wallet

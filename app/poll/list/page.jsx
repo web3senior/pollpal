@@ -36,7 +36,7 @@ export default function Page({ params, searchParams }) {
 
   const getPollList = async () => {
     const web3 = new Web3(window.lukso)
-    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
     return await contract.getPastEvents('PollAdded', {
       filter: {}, // Using an array means OR: e.g. 20 or 23
       fromBlock: 0,
@@ -65,7 +65,7 @@ export default function Page({ params, searchParams }) {
     // })
     // console.log(`IPFS`, upload)
     const web3 = new Web3(window.lukso)
-    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+    const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
     const t = toast.loading(`Waiting for transaction's confirmation`)
     const formData = new FormData(e.target)
     const account = auth.wallet
