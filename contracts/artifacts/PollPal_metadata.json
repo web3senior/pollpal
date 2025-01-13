@@ -245,6 +245,30 @@
 				"type": "event"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_pollId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "_authorizedSender",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "_pollCounter",
 				"outputs": [
@@ -1426,11 +1450,11 @@
 			]
 		},
 		"PollPal.sol": {
-			"keccak256": "0x56158c5e0e345c0614596dc1642743b0bcf8bbf0402acfb7949731d27c2efdfc",
+			"keccak256": "0x3b1da365f8909b6aec953639d5b8bf95197278f7a310ab88bcf5cc0f3bc7ccb2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9aa3887841f259183a88a828b89b76c773ac4749bf01a6664028f9c3c82a5a81",
-				"dweb:/ipfs/Qmdp35wg59Kc1VWTdmKWESym8qqrcrhvQ2wzhbHqZ17xcf"
+				"bzz-raw://341bbedd5c0b036e185299df5cf90ababb36e588486c064558cb1c75d8059b45",
+				"dweb:/ipfs/Qmbw2FpLPBMmRKpbdZYo9EpbWcJGqk95f6cHhsss48vN7H"
 			]
 		},
 		"_constant.sol": {

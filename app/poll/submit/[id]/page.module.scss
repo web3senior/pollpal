@@ -15,7 +15,7 @@
 
 // Whitelisted profile
 .whitelisted-profile {
-  background-color: var(--global-background-color);
+  background-color: #F7F9F9;
   padding: 1rem;
   border-radius: var(--global-border-radius);
 }
@@ -283,7 +283,7 @@ label.radio {
   }
 
   &:nth-child(3) {
-    background-color: var(--area4);
+    background-color: var(--area1);
     color: var(--white, #fff);
   }
 }

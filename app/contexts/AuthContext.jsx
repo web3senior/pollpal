@@ -17,13 +17,14 @@ export function useAuth() {
 export const isAuth = async () => localStorage.getItem('accessToken')
 export const chainID = async () => await web3.eth.getChainId()
 export const getIPFS = async (CID) => {
+  console.log(`CID:`, CID)
   //  console.log(CID)
   let requestOptions = {
     method: 'GET',
     redirect: 'follow',
   }
   const response = await fetch(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${CID}`, requestOptions)
-  if (!response.ok) throw new Response('Failed to get data', { status: 500 })
+   if (!response.ok) return {result: false}//throw new Response('Failed to get data', { status: 500 })
   return response.json()
 }
 
@@ -54,6 +55,7 @@ export const fetchProfile = async (account) => {
         // check if it uses keccak256
         //  if (hashFunction === '0x6f357c6a') {
         // download the json file
+        // console.log(`-------------`,web3.utils.hexToUtf8(url).replace('ipfs://', '').replace('://', ''))
         const json = await getIPFS(web3.utils.hexToUtf8(url).replace('ipfs://', '').replace('://', ''))
         return json
       })
@@ -95,7 +97,7 @@ export function AuthProvider({ children }) {
       if (accounts.length === 0) await web3.eth.requestAccounts()
       accounts = await web3.eth.getAccounts()
 
-      getBalance(accounts[0]).then(balance =>     setBalance(balance))
+      getBalance(accounts[0]).then((balance) => setBalance(balance))
       //console.log(accounts)
       setWallet(accounts[0])
       fetchProfile(accounts[0]).then((res) => {
@@ -118,7 +120,7 @@ export function AuthProvider({ children }) {
     isWalletConnected().then((account) => {
       if (account !== undefined) {
         setWallet(account)
-        getBalance(account).then(balance =>     setBalance(balance))
+        getBalance(account).then((balance) => setBalance(balance))
         localStorage.setItem(`wallet`, account)
         setLoading(false)
         fetchProfile(account).then((res) => {

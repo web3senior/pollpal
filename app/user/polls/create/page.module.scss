@@ -7,18 +7,15 @@
   --button-secondary-hover: #f2f2f2;
 
   padding-top: 1rem;
-
 }
-
-
 
 .dialog {
   display: flex;
   align-items: center;
   justify-content: center;
-  border:3px solid red;
+  border: 3px solid red;
   width: 100%;
-  height: 100%;;
+  height: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,34 +29,90 @@
   }
 }
 
-.pagination {
-  position: relative;
-  padding-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  padding: 2rem 0;
-  font-family: var(--ff-vazir);
+.whitelist-container {
+}
+
+.filter-profile {
+  background-color: #f8fafb;
+  padding: 1rem;
+  border-radius: var(--global-border-radius);
+  max-height: 140px;
+  overflow-y: auto;
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 999;
 
   > div {
-    column-gap: 0.25rem;
+    &:not(:first-child) {
+      margin-top: 0.5rem;
+    }
   }
 
-  a {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
+  button {
+    border-radius: var(--global-border-radius);
+  }
 
-    &:focus {
-      outline: none;
-      transform: scale(0.9);
+  figure {
+    border-radius: var(--global-border-radius);
+    padding: 0.4rem;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    max-height: 48px;
+    &:hover {
+      background: #eef3f6;
+    }
+    img {
+      border-radius: var(--global-border-radius);
+    }
+  }
+}
+
+.selected-whitelist {
+  margin: 1rem 0;
+  overflow: hidden;
+
+  button {
+    width: 24px;
+    height: 24px;
+    color: #9cb6c9;
+    background-color: transparent;
+
+    &:hover {
+      span {
+        transform: scale(1.3);
+      }
+    }
+
+    span {
+      font-size: 15px;
+      transition: all .1s ease-in-out;
+    }
+  }
+
+  > div {
+    background: #fafafa;
+    padding-right: 0.5rem;
+    border:1px solid #EEF3F6;
+    border-radius: 999px;
+
+    figure {
+      min-width: 48px;
+      max-height: 48px;
+      border-radius: 999px;
+      background-color: #ccc;
+      overflow: hidden;
+
+      img {
+        width: 48px;
+        height: 48px;
+        border-radius: inherit;
+      }
+    }
+    &:not(:first-child) {
     }
   }
 }
@@ -111,7 +164,6 @@
   }
 }
 
-
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
@@ -132,9 +184,7 @@
 
 @media (max-width: 600px) {
   .page {
-
   }
-
 }
 
 @media (prefers-color-scheme: dark) {

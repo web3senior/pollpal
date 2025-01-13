@@ -8,6 +8,12 @@ const nextConfig = {
         port: '',
         pathname: '/ipfs/**',
       },
+            {
+        protocol: 'https',
+        hostname: 'api.universalprofile.cloud',
+        port: '',
+        pathname: '/**',
+      },
       {
         protocol: 'http',
         hostname: 'localhost',

@@ -92,8 +92,9 @@ contract PollPal is Ownable(msg.sender), Pausable {
 
     constructor() {
         // whitelist sender
-        address[] memory _whitelist = new address[](0);
-        //_whitelist[0] = _msgSender();        // _whitelist[1] = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
+        address[] memory _whitelist = new address[](2);
+        _whitelist[0] = _msgSender();
+        _whitelist[1] = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
         string[] memory _choices = new string[](3);
         _choices[0] = "Option 1";
         _choices[1] = "Option 2";
@@ -243,9 +244,9 @@ contract PollPal is Ownable(msg.sender), Pausable {
         emit PollUpdated(_pollId, _msgSender());
     }
 
-    function _authorizedSender(bytes32 _pollId) internal view returns (bool) {
-        for (uint256 i = 0; i <= poll[_pollId].whitelist.length; i++) if (poll[_pollId].whitelist[i] == _msgSender()) return true;
-        revert NotWhitelisted(_pollId, _msgSender());
+    function _authorizedSender(bytes32 _pollId, address sender) public view returns (bool) {
+        for (uint256 i = 0; i <= poll[_pollId].whitelist.length; i++) if (poll[_pollId].whitelist[i] == sender) return true;
+        revert NotWhitelisted(_pollId, sender);
     }
 
     /// @notice cast vote
@@ -257,7 +258,7 @@ contract PollPal is Ownable(msg.sender), Pausable {
         bytes memory _data
     ) public payable {
         // TODO: Check choice counter with poll id
-        if (poll[_pollId].whitelist.length > 0) _authorizedSender(_pollId);
+        if (poll[_pollId].whitelist.length > 0) _authorizedSender(_pollId, _msgSender());
 
         /// @notice Continue if form doesn't expired
         if (poll[_pollId].start > block.timestamp) revert TooEarly(block.timestamp);

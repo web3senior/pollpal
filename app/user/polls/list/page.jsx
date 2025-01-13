@@ -109,8 +109,8 @@ export default function Page({ params, searchParams }) {
                     </li>
                   </ul>
                   <Link href={`/poll/submit/${item.id}`} className={`text-primary mt-10 d-block`}>
-                        View
-                      </Link>
+                    View
+                  </Link>
                 </div>
               </div>
             ))}

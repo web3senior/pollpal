@@ -8,9 +8,11 @@ import Web3 from 'web3'
 import { useAuth, provider } from '../../../contexts/AuthContext'
 import Shimmer from '@/app/helper/Shimmer'
 import ABI from './../../../abi/pollpal.json'
+import LSP7ABI from './../../../abi/lsp7.json'
 import Image from 'next/image'
 import Link from 'next/link'
-import { toast } from '../../../components/NextToast'
+// import { toast } from '../../../components/NextToast'
+import toast, { Toaster } from 'react-hot-toast'
 import Heading from '../../../components/Heading'
 import Icon from '../../../helper/MaterialIcon'
 import styles from './page.module.scss'
@@ -21,12 +23,14 @@ const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TES
 export default function Page() {
   const [status, setStatus] = useState()
   const [poll, setPoll] = useState()
+  const [pollToken, setPollToken] = useState()
   const [profile, setProfile] = useState()
   const [response, setResponse] = useState()
+  const [authorizedAmount, setAuthorizedAmount] = useState(0)
   const [isExpired, setIsExpired] = useState()
   const [score, setScore] = useState()
   const [maxScoreIndex, setMaxScoreIndex] = useState([])
-  const [whitelistedProfile, setWhitelistedProfile] = useState()
+  const [whitelistedProfile, setWhitelistedProfile] = useState({ list: [] })
   // const status = useFormStatus()
   const router = useRouter()
   const auth = useAuth()
@@ -54,13 +58,13 @@ export default function Page() {
       toast(Object.values(errors)[0], 'error')
       return
     }
-
+    console.log(`selectedOption`, selectedOption)
     try {
       contract.methods
-        .newRespond(params.id, '', selectedOption, true, '0x')
+        .newRespond(params.id, ``, selectedOption, true, '0x')
         .send({
           from: auth.wallet,
-          value: poll.isPayable ? poll.amount : web3.utils.toWei('0', `ether`),
+          value: !pollToken && poll.isPayable ? poll.amount : 0,
         })
         .then((res) => {
           console.log(res) //res.events.tokenId
@@ -71,7 +75,7 @@ export default function Page() {
           //   shapes: ['coin'],
           // })
 
-          toast(`Your vote has been successfully cast!`, `success`)
+          toast.success(`Your vote has been successfully cast!`)
 
           //   e.target.innerText = `Connect & Claim`
           toast.dismiss(t)
@@ -104,13 +108,13 @@ export default function Page() {
         await Promise.all(
           poll.whitelist.map((whitelistedAccount, i) => {
             return auth.fetchProfile(whitelistedAccount).then((profile) => {
-              console.log(profile)
-              whitelisted_profile.push(Object.assign(profile, whitelistedAccount))
+              console.log(i, profile)
+              whitelisted_profile.push(Object.assign(profile, { id: whitelistedAccount }))
             })
           })
         )
-
-        setWhitelistedProfile(whitelisted_profile)
+        console.log(whitelisted_profile)
+        setWhitelistedProfile({ list: whitelisted_profile })
 
         return poll
       })
@@ -127,7 +131,7 @@ export default function Page() {
         await Promise.all(
           responses.map((response, i) => {
             return auth.fetchProfile(response.sender).then((profile) => {
-              console.log(profile)
+              console.log(`==============`, profile)
               responses_with_profile.push(Object.assign(profile, response))
             })
           })
@@ -138,14 +142,105 @@ export default function Page() {
         return responses_with_profile
       })
   }
+  const getAuthorizedAmountFor = async (token) => {
+    let myContract = new web3.eth.Contract(LSP7ABI, token)
+    myContract.methods
+      .authorizedAmountFor(process.env.NEXT_PUBLIC_CONTRACT_TESTNET, auth.wallet)
+      .call()
+      .then((res) => {
+        console.log(res)
+        setAuthorizedAmount(web3.utils.fromWei(res, 'ether'))
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  const handleAllowance = async (e, poll) => {
+    e.target.innerText = `Waiting...`
+    const t = toast.loading(`Waiting for transaction's confirmation`)
+    const myContract = new web3.eth.Contract(LSP7ABI, poll.token)
+    const account = auth.wallet
+
+    let operation = `increase`
+    switch (operation) {
+      case `increase`:
+        myContract.methods
+          .authorizeOperator(process.env.NEXT_PUBLIC_CONTRACT_TESTNET, poll.amount, '0x')
+          .send({
+            from: account,
+            value: 0,
+          })
+          .then((res) => {
+            console.log(res)
+            e.target.innerText = `Approved`
+            toast.success(`Refresh the page`)
+            toast.dismiss(t)
+          })
+          .catch((error) => {
+            console.log(error)
+            e.target.innerText = `Approve`
+            toast.dismiss(t)
+          })
+        break
+      case `decrease`:
+        myContract.methods
+          .decreaseAllowance(process.env.NEXT_PUBLIC_CONTRACT_TESTNET, account, poll.amount, '0x')
+          .send({
+            from: auth.wallet,
+            value: 0,
+          })
+          .then((res) => {
+            console.log(res)
+            e.target.innerText = `decrease`
+            toast.dismiss(t)
+          })
+          .catch((error) => {
+            console.log(error)
+            e.target.innerText = `decrease`
+            toast.dismiss(t)
+          })
+        break
+      default:
+        break
+    }
+  }
+
+  async function getLSP7TokenName(token) {
+    var myHeaders = new Headers()
+    myHeaders.append('Content-Type', `application/json`)
+    myHeaders.append('Accept', `application/json`)
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify({
+        query: `query MyQuery {\n  Asset(where: {id: {_eq: \"${token}\"}}) {\n    id\n    lsp4TokenName\n  }\n}`,
+      }),
+    }
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}`, requestOptions)
+    if (!response.ok) {
+      throw new Response('Failed to ', { status: 500 })
+    }
+    return response.json()
+  }
 
   useEffect(() => {
     getIsExpired(params.id).then((status) => {
-      console.log(status)
+      console.log(`getIsExpired`, status)
       setIsExpired(status)
     })
 
     getPoll().then((poll) => {
+      if (poll.token.toString().trim().toLowerCase() !== web3.utils.padLeft(`0x`, 40)) {
+        getLSP7TokenName(poll.token.toString().trim().toLowerCase()).then((result) => {
+          console.log(result)
+          setPollToken(result)
+        })
+
+        getAuthorizedAmountFor(poll.token)
+      }
+
       getResponseList().then((responses) => {
         console.log(responses)
 
@@ -227,7 +322,13 @@ export default function Page() {
                         {poll.isPayable && (
                           <>
                             <span className={`${styles['badge']}`}>PAYABLE</span>
-                            {poll.token === `0x0000000000000000000000000000000000000000` && <span className={`${styles['badge']}`}>{new Web3().utils.fromWei(poll.amount, `ether`)} $LYX</span>}
+                            {poll.token === web3.utils.padLeft(`0x`, 40) ? (
+                              <span className={`${styles['badge']}`}>{new Web3().utils.fromWei(poll.amount, `ether`)} $LYX</span>
+                            ) : (
+                              <span className={`${styles['badge']}`}>
+                                {new Web3().utils.fromWei(poll.amount, `ether`)} ${pollToken && pollToken?.data.Asset[0].lsp4TokenName.toUpperCase()}
+                              </span>
+                            )}
                           </>
                         )}
                         <span className={`${styles['badge']}`}>Each account can cast a maximum of {poll.votingLimit} votes in this poll.</span>
@@ -280,17 +381,16 @@ export default function Page() {
                         <>
                           <div className={`${styles['respond_profiles']} d-f-c flex-row`}>
                             {response
-                              .filter((item, i) => i < 3)
                               .map((item, i) => {
                                 return (
                                   <Image
                                     key={i}
                                     className={`rounded ms-depth-4`}
-                                    alt={item.LSP3Profile.name}
-                                    title={`@${item.LSP3Profile.name}`}
+                                    alt={item?.LSP3Profile?.name}
+                                    title={`@${item?.LSP3Profile?.name}`}
                                     width={40}
                                     height={40}
-                                    src={`https://ipfs.io/ipfs/${item.LSP3Profile.profileImage.length > 0 && item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
+                                    src={`https://ipfs.io/ipfs/${item?.LSP3Profile.profileImage.length > 0 && item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
                                   />
                                 )
                               })}
@@ -305,9 +405,23 @@ export default function Page() {
                       </ul>
                     </div>
 
-                    <button type={`submit`} className={`btn ms-depth-4`} disabled={isExpired}>
-                      Vote Now
-                    </button>
+                    <div className={`d-flex flex-column grid--gap-025`}>
+                      {web3.utils.fromWei(poll.amount) === authorizedAmount && (
+                        <span>
+                          Approved amount of ${pollToken && pollToken?.data.Asset[0].lsp4TokenName.toUpperCase()}: {authorizedAmount}
+                        </span>
+                      )}
+
+                      {poll.token.toString().trim().toLowerCase() !== web3.utils.padLeft(`0x`, 40) && web3.utils.fromWei(poll.amount) !== authorizedAmount ? (
+                        <button type={`button`} className={`btn ms-depth-4`} disabled={isExpired} onClick={(e) => handleAllowance(e, poll)}>
+                          Approve {new Web3().utils.fromWei(poll.amount, `ether`)} ${pollToken && pollToken?.data.Asset[0].lsp4TokenName.toUpperCase()}
+                        </button>
+                      ) : (
+                        <button type={`submit`} className={`btn ms-depth-4`} disabled={isExpired}>
+                          Vote Now
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <figure className={`${styles['logo']} ms-depth-4 mt-20`}>
@@ -323,42 +437,39 @@ export default function Page() {
 
         {/* Whitelisted profiles */}
         {poll && poll.whitelist.length > 0 && (
-          <>
-            <div className={`card`}>
-              <div className={`card__header`}>
-                <div className={`d-flex align-items-start justify-content-between`} style={{ gap: `1rem` }}>
-                  <p>This poll is whitelisted</p>
-                  <small className={`text-secondary`}>{poll.whitelist.length} profiles</small>
-                </div>
-              </div>
-              <div className={`card__body grid grid--fit grid--gap-1`} style={{ '--data-width': `200px` }}>
-                {whitelistedProfile &&
-                  whitelistedProfile
-                    .filter((item, i) => i < 3)
-                    .map((item, i) => {
-                      return (
-                        <div key={i} className={`${styles['whitelisted-profile']}`}>
-                          <figure className={`d-flex align-items-center`} style={{ gap: `.7rem` }}>
-                            <Image
-                              key={i}
-                              className={`rounded ms-depth-4`}
-                              alt={item.LSP3Profile.name}
-                              title={`@${item.LSP3Profile.name}`}
-                              width={40}
-                              height={40}
-                              src={`https://ipfs.io/ipfs/${item.LSP3Profile.profileImage.length > 0 && item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
-                            />
-                            <figcaption className={`d-flex flex-column`}>
-                              {profile.LSP3Profile.name} <br />
-                              <i style={{ fontSize: `10px` }}>{auth.wallet && `${auth.wallet.slice(0, 4)}...${auth.wallet.slice(38)}`}</i>
-                            </figcaption>
-                          </figure>
-                        </div>
-                      )
-                    })}
+          <div className={`card`}>
+            <div className={`card__header`}>
+              <div className={`d-flex align-items-start justify-content-between`} style={{ gap: `1rem` }}>
+                <p>This poll is whitelisted</p>
+                <small className={`text-secondary`}>{poll.whitelist.length} profiles</small>
               </div>
             </div>
-          </>
+            <div className={`card__body grid grid--fit grid--gap-1`} style={{ '--data-width': `200px` }}>
+              {whitelistedProfile &&
+                whitelistedProfile.list.length > 0 &&
+                whitelistedProfile.list.map((item, i) => {
+                  if (!item.LSP3Profile) return
+                  return (
+                    <div key={i} className={`${styles['whitelisted-profile']}`}>
+                      <figure className={`d-flex align-items-center`} style={{ gap: `.7rem` }}>
+                        <img
+                          className={`rounded ms-depth-8`}
+                          alt={item.LSP3Profile?.name}
+                          title={`@${item.LSP3Profile?.name}`}
+                          width={40}
+                          height={40}
+                          src={`https://ipfs.io/ipfs/${item.LSP3Profile?.profileImage.length > 0 ? item.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '') : `bafkreic63gdzkdiye7vlcvbchillkszl6wbf2t3ysxcmr3ovpah3rf4h7i`}`}
+                        />
+                        <figcaption className={`d-flex flex-column`}>
+                          <p>{item.LSP3Profile.name}</p>
+                          <i style={{ fontSize: `10px` }}>{auth.wallet && `${item.id.slice(0, 4)}...${item.id.slice(38)}`}</i>
+                        </figcaption>
+                      </figure>
+                    </div>
+                  )
+                })}
+            </div>
+          </div>
         )}
 
         {/* Response rate for whitelisted polls */}
