@@ -118,11 +118,13 @@ export default function Page() {
     //   creator: profile.id,
     // })
     // console.log(`IPFS`, upload)
+    console.log(process.env.NEXT_PUBLIC_CONTRACT)
     const web3 = new Web3(window.lukso)
     const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
     const t = toast.loading(`Waiting for transaction's confirmation`)
     const formData = new FormData(e.target)
     const account = auth.wallet
+
     let image
 
     const now = await contract.methods.getNow().call()

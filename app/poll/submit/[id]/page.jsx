@@ -18,7 +18,7 @@ import Icon from '../../../helper/MaterialIcon'
 import styles from './page.module.scss'
 
 const web3 = new Web3(window.lukso)
-const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT_TESTNET)
+const contract = new web3.eth.Contract(ABI, process.env.NEXT_PUBLIC_CONTRACT)
 
 export default function Page() {
   const [status, setStatus] = useState()

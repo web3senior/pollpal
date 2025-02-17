@@ -557,6 +557,30 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_pollId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			}
+		],
+		"name": "_authorizedSender",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "_pollCounter",
 		"outputs": [
