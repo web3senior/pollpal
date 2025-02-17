@@ -31,7 +31,7 @@ export default function ConnectWallet() {
             <li className={`d-flex flex-row align-items-center justify-content-end`}>
               <Image
                 className={`rounded`}
-                alt={auth.profile && auth.profile.LSP3Profile.name}
+                alt={auth.profile && auth.profile.LSP3Profile?.name}
                 title={auth.wallet && `${auth.wallet.slice(0, 4)}...${auth.wallet.slice(38)}`}
                 width={40}
                 height={40}
