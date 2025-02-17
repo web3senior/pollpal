@@ -36,7 +36,7 @@ export default function ConnectWallet() {
                 width={40}
                 height={40}
                 priority
-                src={`https://ipfs.io/ipfs/${auth.profile.LSP3Profile.profileImage.length > 0 && auth.profile.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
+                src={`https://ipfs.io/ipfs/${auth.profile.LSP3Profile?.profileImage.length > 0 && auth.profile.LSP3Profile.profileImage[0].url.replace('ipfs://', '').replace('://', '')}`}
               />
               <span>{`${auth.wallet.slice(0, 4)}...${auth.wallet.slice(38)}`}</span>
               <Icon name={'keyboard_arrow_down'} />
