@@ -410,8 +410,8 @@ export default function Page() {
                 <label htmlFor={`token`}>Token</label>
                 <select name="token" id="">
                   <option value={`0x0000000000000000000000000000000000000000`}>$LYX</option>
+                  <option value={`0x59a070edc7d5c621a845ddbdfafbbde9f25dbc70`}>$ARATTA</option>
                   <option value={`0x00ecc3275aeb551ec553bfcb966cd0813ecf2935`}>$FISH</option>
-                  <option value={`0x39f73b9c8d4e370fd9ff22c932ed58009680aff0`}>$PEPITO</option>
                 </select>
               </div>
               <div>
